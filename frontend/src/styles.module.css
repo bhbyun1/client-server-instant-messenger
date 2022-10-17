@@ -1,0 +1,85 @@
+/* body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+      'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+      sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  
+  code {
+    font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+      monospace;
+  }
+  
+   */
+  .App {
+    text-align: center;
+  }
+  
+  .App_logo {
+    height: 40vmin;
+    pointer-events: none;
+  }
+  
+  @media (prefers-reduced-motion: no-preference) {
+    .App_logo {
+      animation: App_logo-spin infinite 20s linear;
+    }
+  }
+  
+  .App_background {
+    /* background-color: #282c34; */
+    background-color: #555555;
+    min-height: 100vh;
+    min-width: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* justify-content: center; */
+    font-size: calc(10px + 2vmin);
+    color: white;
+    top: 0px;
+  }
+  
+  .App_link {
+    color: #61dafb;
+  }
+  
+  @keyframes App_logo-spin {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  
+  .App_title {
+    color: white;
+    margin-left: 50px;
+    margin-right: auto;
+    top: 0px;
+  }
+  
+  .App_header {
+    background-color: #353839;
+    width: 100%;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .Header-button {
+    margin: 0 auto;
+  }
+
+  .Login_box {
+    right: 50px;
+  }
+
+  .Login_background {
+    background-color: #353839;
+  }
