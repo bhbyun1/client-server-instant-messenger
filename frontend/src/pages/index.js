@@ -1,6 +1,7 @@
 import styles from '../styles.module.css'
 
 import { Button, AppBar, Toolbar, Typography, IconButton } from '@mui/material';
+import {BrowserRouter as Router} from 'react-router-dom';
 
 var loginButton = {
   backgroundColor: "blue",
@@ -38,6 +39,16 @@ function App() {
       </AppBar>
     </div>
   );
-}
+};
 
-export default App;
+// export default App;
+
+function AppWrapper() {
+  return (
+    <Router>
+      <App />
+    </Router>
+  );
+};
+
+export default AppWrapper;
