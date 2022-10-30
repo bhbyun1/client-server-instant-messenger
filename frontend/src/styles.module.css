@@ -103,3 +103,11 @@
     align-items: center;
     padding: 16px;
   }
+
+  .login_box {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    min-height: 100vh;
+  }

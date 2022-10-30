@@ -1,24 +1,41 @@
 import styles from '../styles.module.css'
 
-import { Button } from '@mui/material';
+import { Button, AppBar, Toolbar, Typography, IconButton } from '@mui/material';
 
 var loginButton = {
-  backgroundColor: "gray",
+  backgroundColor: "blue",
   color: "white",
-  borderColor: "black",
+  borderColor: "white",
   marginRight: "25px"
 };
 
 function App() {
   return (
     <div className="App">
-      <header className={styles.App_background}>
-        <header className={styles.App_header}>
-          <p className={styles.App_title}>Client-Server Messenger</p>
-          <Button variant="outlined" style={loginButton} href="./login">Login</Button>
-          <Button variant="outlined" style={loginButton} href="./chatpage">Chatpage</Button>
-        </header>
-      </header>
+      <AppBar sx={{position: 'fixed'}}>
+        <Toolbar>
+          <Typography variant='h6'>Login Screen</Typography>
+          <IconButton
+            sx={{marginLeft: 'auto'}}
+            aria-label='close'
+          >
+          </IconButton>
+          <Button
+              variant='contained'
+              type='submit'
+              sx={{width: '7%', marginRight: '2%'}}
+              href="./login">
+              Login
+          </Button>
+          <Button
+            variant='contained'
+            type='submit'
+            sx={{width: '8%'}}
+            href="./chatpage">
+            Chat Page
+          </Button>
+        </Toolbar>
+      </AppBar>
     </div>
   );
 }

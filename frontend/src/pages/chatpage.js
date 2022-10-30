@@ -7,18 +7,18 @@ import { useEffect, useState } from "react";
 function Chatpage() {
   const [socketInstance, setSocketInstance] = useState("");
   const [loading, setLoading] = useState(true);
-  const [buttonStatus, setButtonStatus] = useState(false);
+  const [showChat, setShowChat] = useState(false);
 
-  const handleClick = () => {
-    if (buttonStatus === false) {
-      setButtonStatus(true);
+  const showChatClick = () => {
+    if (!showChat) {
+      setShowChat(true);
     } else {
-      setButtonStatus(false);
+      setShowChat(false);
     }
   };
 
   useEffect(() => {
-    if (buttonStatus === true) {
+    if (showChat) {
       const socket = io("localhost:5000/", {
         transports: ["websocket"],
         cors: {
@@ -27,35 +27,25 @@ function Chatpage() {
       });
 
       setSocketInstance(socket);
-
-      socket.on("connect", (data) => {
-        console.log(data);
-      });
-
       setLoading(false);
 
-      socket.on("disconnect", (data) => {
-        console.log(data);
-      });
-
-      return function cleanup() {
+      return function disconnect() {
         socket.disconnect();
       };
     }
-  }, [buttonStatus]);
+  }, [showChat]);
 
   return (
     <div className="App">
-      <h1>React/Flask App + socket.io</h1>
-      <div className="line">
-        <HttpCall />
+      <div>
+        {/* <HttpCall /> */}
       </div>
-      {!buttonStatus ? (
-        <button onClick={handleClick}>turn chat on</button>
+      {!showChat ? (
+        <button onClick={showChatClick}>Chat On</button>
       ) : (
         <>
-          <button onClick={handleClick}>turn chat off</button>
-          <div className="line">
+          <button onClick={showChatClick}>Chat Off</button>
+          <div>
             {!loading && <WebSocketCall socket={socketInstance} />}
           </div>
         </>
