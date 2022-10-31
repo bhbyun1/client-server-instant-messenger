@@ -13,7 +13,7 @@ export default function WebSocketCall({ socket }) {
     if (!message) {
       return;
     }
-    socket.emit("data", message);
+    socket.emit("data", sessionStorage.Username + ": " + message);
     setMessage("");
   };
 

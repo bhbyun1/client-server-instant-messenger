@@ -13,17 +13,20 @@ import IconButton from '@mui/material/IconButton';
 // import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import Box from '@mui/material/Box';
 // import styles from '../styles.module.css'
-import {useNavigate} from 'react-router-dom';
-import {BrowserRouter as Router} from 'react-router-dom';
+// import {useNavigate} from 'react-router-dom';
+// import {BrowserRouter as Router} from 'react-router-dom';
+import useRouter from 'next/router';
+// import Router from "react-router-dom";
 
 const Login = () => {
-  const [user, setUser] = React.useState({email: '', password: ''});
+  const [user, setUser] = React.useState({username: '', password: ''});
   // updates state for displaying eror when email/password is incorrect
   const [error, setError] = React.useState('');
   // used to update the log out button to appear after logging in
   // const {setVisible} = useContext(CategoryContext);
   // used to go back to the main home page and goto new account page
-  const history = useNavigate();
+  // const history = useNavigate();
+  const router = useRouter;
   const handleInputChange = (event) => {
     // grabs data from input boxes
     const {value, name} = event.target;
@@ -35,6 +38,15 @@ const Login = () => {
     setUser(u);
   };
 
+  const onSubmit = (event) => {
+    event.preventDefault();
+    sessionStorage.setItem("Username", user.username)
+    if (0) {
+      console.log(0);
+    } else {
+      router.push('/home');
+    }
+  }
 
   // const onSubmit = (event) => {
   //   event.preventDefault();
@@ -86,6 +98,7 @@ const Login = () => {
             title='username'
             label='username'
             name='username'
+            onChange={handleInputChange}
             required
             sx={{my: '2%', width: '300px'}}
           />
@@ -100,6 +113,7 @@ const Login = () => {
           <Button
             variant='contained'
             type='submit'
+            // onClick={onSubmit}
             sx={{my: '3%', width: '300px'}}>
             Login
           </Button>
