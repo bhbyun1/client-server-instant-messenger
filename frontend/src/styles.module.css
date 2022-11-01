@@ -114,4 +114,5 @@
 
   .message_list {
     list-style-type: none;
+    padding-left: 10px;
   }
