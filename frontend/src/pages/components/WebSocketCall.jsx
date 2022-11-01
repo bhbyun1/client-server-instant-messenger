@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
 import Container from '@mui/material/Container';
-import styles from '../../styles.module.css';
 import IconButton from '@mui/material/IconButton';
-import OutlinedInput from '@mui/material/OutlinedInput';
+import TextField from '@mui/material/TextField';
 import InputLabel from '@mui/material/InputLabel';
 import InputAdornment from '@mui/material/InputAdornment';
 import FormControl from '@mui/material/FormControl';
@@ -45,29 +44,30 @@ export default function WebSocketCall({ socket }) {
           return <li key={ind}>{message}</li>;
         })}
       </ul>
-
-      <FormControl sx={{ m: 1, width: '80%' }} variant="outlined">
-          <InputLabel htmlFor="text-input">Start typing...</InputLabel>
-          <OutlinedInput
+          <TextField
             id="text-input"
+            label="Start typing..."
             type={'text'}
             value={message}
             onChange={handleText}
-            endAdornment={
+            onKeyDown={(e) => {
+                if (e.key == 'Enter'){
+                  handleSubmit();
+                }
+              }
+            }
+            InputProps={{
+              endAdornment: 
               <InputAdornment position="end">
                 <IconButton
                   aria-label="send"
                   onClick={handleSubmit}
-                  edge="end"
-                >
-                  <SendIcon />
+                  edge="end">
+                <SendIcon />
                 </IconButton>
-
-              </InputAdornment>
-            }
-            label="text-input"
+              </InputAdornment>,
+            }}
           />
-      </FormControl>
       </Container>
     </div>
   );
