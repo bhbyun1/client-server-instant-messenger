@@ -15,7 +15,7 @@ function Home() {
     <div className="App">
       <AppBar sx={{position: 'fixed'}}>
         <Toolbar>
-          <Typography variant='h6'>Login Screen</Typography>
+          <Typography variant='h6'>Home</Typography>
           <IconButton
             sx={{marginLeft: 'auto'}}
             aria-label='close'

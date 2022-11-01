@@ -41,11 +41,7 @@ const Login = () => {
   const onSubmit = (event) => {
     event.preventDefault();
     sessionStorage.setItem("Username", user.username)
-    if (0) {
-      console.log(0);
-    } else {
-      router.push('/home');
-    }
+    router.push('/chatpage'); // redirect to chatpage instantly after login instead of home
   }
 
   // const onSubmit = (event) => {
@@ -65,12 +61,12 @@ const Login = () => {
   //       return res.json();
   //     })
   //     .then((json) => {
-  //       // puts user into the localstorage
-  //       localStorage.setItem('member', JSON.stringify(json));
-  //       // log out button become visible
+  //       // puts user into the sessionstorage (might do localstorage instead ?)
+  //       sessionStorage.setItem("Username", user.username)
+  //       // log out button become visible not yet implemented
   //       // setVisible(true);
   //       // goto to home page
-  //       // history.push('/');
+  //       // router.push('/home');
   //     })
   //     .catch((error) => {
   //       // displays error for incorrect username/password
@@ -89,6 +85,13 @@ const Login = () => {
               aria-label='close'
             >
             </IconButton>
+            <Button
+              variant='contained'
+              type='submit'
+              sx={{width: '7%'}}
+              href="./home">
+              Home
+            </Button>
           </Toolbar>
         </AppBar>
         <div className={styles.login_box}>
