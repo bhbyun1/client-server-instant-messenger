@@ -112,6 +112,6 @@
     min-height: 100vh;
   }
 
-  .textbar {
-    width: 80%;
+  .message_list {
+    list-style-type: none;
   }

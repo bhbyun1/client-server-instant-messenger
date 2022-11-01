@@ -2,10 +2,9 @@ import { useEffect, useState } from "react";
 import Container from '@mui/material/Container';
 import IconButton from '@mui/material/IconButton';
 import TextField from '@mui/material/TextField';
-import InputLabel from '@mui/material/InputLabel';
 import InputAdornment from '@mui/material/InputAdornment';
-import FormControl from '@mui/material/FormControl';
 import SendIcon from '@mui/icons-material/Send';
+import styles from '../../styles.module.css';
 
 export default function WebSocketCall({ socket }) {
   const [message, setMessage] = useState("");
@@ -39,7 +38,7 @@ export default function WebSocketCall({ socket }) {
     <div>
       <h2>WebSocket Communication</h2>
       <Container maxWidth="sm">
-      <ul>
+      <ul className={styles.message_list}>
         {messages.map((message, ind) => {
           return <li key={ind}>{message}</li>;
         })}
