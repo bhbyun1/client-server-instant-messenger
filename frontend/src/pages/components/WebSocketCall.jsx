@@ -8,7 +8,7 @@ import styles from '../../styles.module.css';
 
 export default function WebSocketCall({ socket }) {
   const [message, setMessage] = useState("");
-  const [messages, setMessages] = useState([]);
+  const [messages, setMessages] = useState([{'username': '', 'message': ''}]);
 
   const handleText = (e) => {
     const inputMessage = e.target.value;
@@ -19,7 +19,7 @@ export default function WebSocketCall({ socket }) {
     if (!message) {
       return;
     }
-    socket.emit("data", sessionStorage.Username + ": " + message);
+    socket.emit("data", {'username': sessionStorage.Username + ": ", 'message': message});
     setMessage("");
   };
 
@@ -37,13 +37,24 @@ export default function WebSocketCall({ socket }) {
   return (
     <div>
       <h2>WebSocket Communication</h2>
-      <Container maxWidth="sm">
+      <Container maxWidth='sm'>
       <ul className={styles.message_list}>
-        {messages.map((message, ind) => {
-          return <li key={ind}>{message}</li>;
+        {messages.map((data, ind) => {
+          return (
+            <li key={ind}>
+              <div className={styles.username}>
+                {data['username']}
+              </div>
+              <div>
+                {data['message']}
+              </div>
+              <br/>
+            </li>
+          );
         })}
       </ul>
           <TextField
+            className={styles.text_field}
             id="text-input"
             label="Start typing..."
             type={'text'}
