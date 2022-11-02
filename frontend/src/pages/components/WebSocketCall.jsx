@@ -37,22 +37,25 @@ export default function WebSocketCall({ socket }) {
   return (
     <div>
       <h2>WebSocket Communication</h2>
-      <Container maxWidth='sm'>
-      <ul className={styles.message_list}>
-        {messages.map((data, ind) => {
-          return (
-            <li key={ind}>
-              <div className={styles.username}>
-                {data['username']}
-              </div>
-              <div>
-                {data['message']}
-              </div>
-              <br/>
-            </li>
-          );
-        })}
-      </ul>
+      <div className={styles.conversation_container}>
+        <div className={styles.conversation}>
+          <div className={styles.message_list}>
+            {messages.map((data, ind) => {
+              return (
+                <div className={styles.message} key={ind}>
+                  <div className={styles.username}>
+                    {data['username']}
+                  </div>
+                  <div>
+                    {data['message']}
+                  </div>
+                  <br/>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+        <div className={styles.text_field_wrapper}>
           <TextField
             className={styles.text_field}
             id="text-input"
@@ -78,7 +81,8 @@ export default function WebSocketCall({ socket }) {
               </InputAdornment>,
             }}
           />
-      </Container>
+        </div>
+      </div>
     </div>
   );
 }
