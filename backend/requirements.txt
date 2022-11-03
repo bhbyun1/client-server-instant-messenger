@@ -17,7 +17,6 @@ lazy-object-proxy==1.7.1
 Mako==1.2.3
 MarkupSafe==2.1.1
 mccabe==0.7.0
-pkg_resources==0.0.0
 platformdirs==2.5.2
 psycopg2==2.9.4
 pylint==2.15.4
