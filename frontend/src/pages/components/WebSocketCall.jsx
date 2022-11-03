@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import Container from '@mui/material/Container';
+import ConversationPanel from "./ConversationPanel";
 import IconButton from '@mui/material/IconButton';
 import TextField from '@mui/material/TextField';
 import InputAdornment from '@mui/material/InputAdornment';
@@ -37,6 +37,7 @@ export default function WebSocketCall({ socket }) {
   return (
     <div>
       <h2>WebSocket Communication</h2>
+      <ConversationPanel />
       <div className={styles.conversation_container}>
         <div className={styles.conversation}>
           <div className={styles.message_list}>
