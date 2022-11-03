@@ -1,6 +1,9 @@
 import styles from '../styles.module.css'
 
 import { Button, AppBar, Toolbar, Typography, IconButton } from '@mui/material';
+import {BrowserRouter as Router} from 'react-router-dom';
+
+import Home from './home';
 
 var loginButton = {
   backgroundColor: "blue",
@@ -12,32 +15,9 @@ var loginButton = {
 function App() {
   return (
     <div className="App">
-      <AppBar sx={{position: 'fixed'}}>
-        <Toolbar>
-          <Typography variant='h6'>Login Screen</Typography>
-          <IconButton
-            sx={{marginLeft: 'auto'}}
-            aria-label='close'
-          >
-          </IconButton>
-          <Button
-              variant='contained'
-              type='submit'
-              sx={{width: '7%', marginRight: '2%'}}
-              href="./login">
-              Login
-          </Button>
-          <Button
-            variant='contained'
-            type='submit'
-            sx={{width: '8%'}}
-            href="./chatpage">
-            Chat Page
-          </Button>
-        </Toolbar>
-      </AppBar>
+      <Home/>
     </div>
   );
-}
+};
 
 export default App;

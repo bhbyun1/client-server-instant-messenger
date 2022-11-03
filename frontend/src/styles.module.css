@@ -111,3 +111,45 @@
     text-align: center;
     min-height: 100vh;
   }
+
+  .message_list {
+    list-style-type: none;
+    padding-left: 0;
+    position: absolute;
+    bottom: 15%;
+    overflow-y: auto;
+    max-height: 80%;
+    width: 100%;
+  }
+
+  .message {
+    position: relative;
+    bottom: 0;
+  }
+
+  .username {
+    font-weight: bold;
+  }
+
+  .text_field {
+    width: 100%;
+  }
+
+  .text_field_wrapper {
+    position: absolute;
+    bottom: 5%;
+    width: 100%;
+  }
+
+  .conversation {
+    height: 85%;
+    white-space: initial;
+  }
+
+  .conversation_container {
+    position: absolute;
+    top: 20vh;
+    left: 30vw;
+    width: 50vw;
+    height: 70vh;
+  }
