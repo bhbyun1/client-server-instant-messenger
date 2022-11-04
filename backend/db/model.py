@@ -16,7 +16,8 @@ class User(Base):
     __tablename__ = "users"
 
     id = Column(Integer, primary_key=True)
-    name = Column(String(30), nullable=False)
+    name = Column(String(30), nullable=False, unique=True)
+    fullname = Column(String(50))
     pw = Column(String, nullable=False)
     admin = Column(Boolean)
     inactive = Column(DateTime)
