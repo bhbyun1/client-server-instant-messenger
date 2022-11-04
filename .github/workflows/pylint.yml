@@ -17,7 +17,7 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install pylint
+        pip install pylint pylint_flask pylint_flask_sqlalchemy
     - name: Analysing the code with pylint
       run: |
-        pylint $(git ls-files '*.py')
+        pylint $(git ls-files '*.py') --load-plugins pylint_flask_sqlalchemy,pylint_flask_sqlalchemy,pylint_flask
