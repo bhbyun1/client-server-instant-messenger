@@ -1,6 +1,8 @@
 """defines data schema"""
+import json
 from sqlalchemy import Column, Integer, String, ForeignKey, Table, Boolean, DateTime
 from sqlalchemy.orm import declarative_base, relationship
+
 
 Base = declarative_base()
 
@@ -11,14 +13,15 @@ user_chatroom_join_table = Table(
     Column("chatrooms_id", ForeignKey("chatrooms.id"), primary_key=True)
 )
 
+
 class User(Base):
     """test user class"""
     __tablename__ = "users"
 
     id = Column(Integer, primary_key=True)
-    name = Column(String(30), nullable=False, unique=True)
+    username = Column(String(30), nullable=False, unique=True)
     fullname = Column(String(50))
-    pw = Column(String, nullable=False)
+    password = Column(String, nullable=False)
     admin = Column(Boolean)
     inactive = Column(DateTime)
 
@@ -33,7 +36,21 @@ class User(Base):
     )
 
     def __repr__(self):
-        return f"User(id={self.id!r}, name={self.name!r})"
+        return f"User(id={self.id!r}, name={self.username!r}, password={self.password!r})"
+
+    def as_json_string(self):
+        """
+        Returns the user parameters as a JSON string
+        """
+        user = {
+            'Username': self.username,
+            'Fullname': self.fullname,
+            'Admin': self.admin,
+            'Inactive': self.inactive,
+            'ID': self.id
+        }
+        return user
+
 
 class Chatroom(Base):
     """entity for chat rooms"""
@@ -52,8 +69,10 @@ class Chatroom(Base):
     messages = relationship(
         "Message", back_populates="chatroom"
     )
+
     def __repr__(self) -> str:
         return f"Chatroom(id={self.id!r}, name={self.name!r}, owner={self.owner.name!r})"
+
 
 class Message(Base):
     """entity for chat messages"""
@@ -71,7 +90,6 @@ class Message(Base):
 
     def __repr__(self) -> str:
         return f"Message(id={self.id!r})"
-
 
 
 Base.registry.configure()
