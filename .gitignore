@@ -4,8 +4,9 @@ coverage/
 .vscode/
 .next
 .next/
+*/.next/
 .python-version
-
+*/.python-version
 ####################################
 # PYTHON IGNORE 
 ####################################
