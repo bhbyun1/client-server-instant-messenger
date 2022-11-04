@@ -125,8 +125,15 @@ def login():
         return bad_request
 
     user = db.session.execute(
-        db.select(User).filter_by(username=auth.username)).one()
+        db.select(User).filter_by(username=auth.username)).first()
+
     print(f"user is {user}")
+
+    login_fail = make_response('Invalid username or password', 401, {
+                                       'Authentication': 'Login required'})
+    if not user:
+        return login_fail
+
     if check_password_hash(user[0].password, auth.password):
         token = jwt.encode(
             {
@@ -135,8 +142,8 @@ def login():
             },
             app.config['SECRET'],
             "HS256")
-        return jsonify({'token': token})
-    return bad_request
+        return jsonify({'token': token.decode("utf-8")})
+    return login_fail
 
 
 if __name__ == '__main__':
