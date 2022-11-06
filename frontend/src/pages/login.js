@@ -22,10 +22,6 @@ const Login = () => {
   const [user, setUser] = React.useState({username: '', password: ''});
   // updates state for displaying eror when email/password is incorrect
   const [error, setError] = React.useState('');
-  // used to update the log out button to appear after logging in
-  // const {setVisible} = useContext(CategoryContext);
-  // used to go back to the main home page and goto new account page
-  // const history = useNavigate();
   const router = useRouter;
   const handleInputChange = (event) => {
     // grabs data from input boxes
@@ -40,43 +36,24 @@ const Login = () => {
 
   const onSubmit = (event) => {
     event.preventDefault();
-    sessionStorage.setItem("Username", user.username)
-    if (0) {
-      console.log(0);
-    } else {
-      router.push('/home');
-    }
-  }
+    // checks with db that user exists
+    let username = user.username;
+    let password = user.password;
 
-  // const onSubmit = (event) => {
-  //   event.preventDefault();
-  //   // checks with db that user exists
-  //   fetch('/insert/api/here', {
-  //     method: 'POST',
-  //     body: JSON.stringify(user),
-  //     headers: {
-  //       'Content-Type': 'application/json',
-  //     },
-  //   })
-  //     .then((res) => {
-  //       if (!res.ok) {
-  //         throw res;
-  //       }
-  //       return res.json();
-  //     })
-  //     .then((json) => {
-  //       // puts user into the localstorage
-  //       localStorage.setItem('member', JSON.stringify(json));
-  //       // log out button become visible
-  //       // setVisible(true);
-  //       // goto to home page
-  //       // history.push('/');
-  //     })
-  //     .catch((error) => {
-  //       // displays error for incorrect username/password
-  //       setError(`${error.statusText} - wrong username or password`);
-  //     });
-  // };
+    fetch('http://localhost:5000/login', {
+      method: 'POST',
+      body: { 'username': username, 'password': password }
+    }).then(function (response) {
+      if (response.ok) {
+        return response.json();
+      }
+      throw response;
+    }).then(function (data) {
+      console.log(data);
+    }).catch(function (error) {
+      console.warn(error);
+    });
+  };
   
 
   return (
@@ -132,13 +109,3 @@ const Login = () => {
 };
 
 export default Login;
-
-// const LoginWrapper = () => {
-//   return (
-//     <Router>
-//       <Login />
-//     </Router>
-//   );
-// };
-
-// export default LoginWrapper;
