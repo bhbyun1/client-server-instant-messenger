@@ -40,40 +40,24 @@ const Login = () => {
 
   const onSubmit = (event) => {
     event.preventDefault();
-    sessionStorage.setItem("Username", user.username)
-    router.push('/chatpage'); // redirect to chatpage instantly after login instead of home
-  }
+    // checks with db that user exists
+    let username = user.username;
+    let password = user.password;
 
-  // const onSubmit = (event) => {
-  //   event.preventDefault();
-  //   // checks with db that user exists
-  //   fetch('/insert/api/here', {
-  //     method: 'POST',
-  //     body: JSON.stringify(user),
-  //     headers: {
-  //       'Content-Type': 'application/json',
-  //     },
-  //   })
-  //     .then((res) => {
-  //       if (!res.ok) {
-  //         throw res;
-  //       }
-  //       return res.json();
-  //     })
-  //     .then((json) => {
-  //       // puts user into the sessionstorage (might do localstorage instead ?)
-  //       sessionStorage.setItem("Username", user.username)
-  //       // log out button become visible not yet implemented
-  //       // setVisible(true);
-  //       // goto to home page
-  //       // router.push('/home');
-  //     })
-  //     .catch((error) => {
-  //       // displays error for incorrect username/password
-  //       setError(`${error.statusText} - wrong username or password`);
-  //     });
-  // };
-  
+    fetch('http://localhost:5000/user', {
+      method: 'POST',
+      body: { 'username': username, 'password': password }
+    }).then(function (response) {
+      if (response.ok) {
+        return response.json();
+      }
+      throw response;
+    }).then(function (data) {
+      console.log(data);
+    }).catch(function (error) {
+      console.warn(error);
+    });
+  };
 
   return (
     <form onSubmit={onSubmit}>
