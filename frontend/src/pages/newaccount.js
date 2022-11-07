@@ -17,62 +17,61 @@ import Box from '@mui/material/Box';
 // import {BrowserRouter as Router} from 'react-router-dom';
 import useRouter from 'next/router';
 // import Router from "react-router-dom";
+import bcrypt from 'bcryptjs';
 
-const Login = () => {
-  const [user, setUser] = React.useState({username: '', password: ''});
+const Register = () => {
   // updates state for displaying eror when email/password is incorrect
-  const [error, setError] = React.useState('');
+  // used to update the log out button to appear after logging in
+  // const {setVisible} = useContext(CategoryContext);
+  // used to go back to the main home page and goto new account page
+  // const history = useNavigate();
   const router = useRouter;
+  let user = {username: '', password: ''}
   const handleInputChange = (event) => {
-    // grabs data from input boxes
     const {value, name} = event.target;
-    // grabs from the user state
-    const u = user;
-    // u[name] is the actual input
-    u[name] = value;
-    // sets the state defined above
-    setUser(u);
+    user[name] = value;
   };
 
   const onSubmit = (event) => {
     event.preventDefault();
-    // checks with db that user exists
     const username = user.username;
     const password = user.password;
-    
-    let headers = new Headers();
-    headers.set('Content-Type', 'application/json');
-    headers.set('Authorization', 'Basic ' + Buffer.from(username + ":" + password).toString('base64'));
-
-    fetch('http://localhost:5000/login', {
-      headers: headers,
+    // checks with db that user exists
+    fetch('http://localhost:5000/user', {
+      headers: {
+        'Content-Type': 'application/json'
+      },
       method: 'POST',
       body: JSON.stringify({ 'username': username, 'password': password })
     }).then((response) => response.json())
     .then((response) => {
-      if (response.token) {
-        sessionStorage.setItem('token', response['token'])
-        sessionStorage.setItem('Username', username);
-        router.push('http://localhost:3000/chatpage');
+      if (response.message == 'Registration successful') {
+        router.push('http://localhost:3000/login');
         return response;
       } else {
-        // TODO: Maybe show alert that username and password are wrong
+        // TODO: Maybe show alert that registration failed
         router.reload();
       }
     });
   };
-  
 
   return (
     <form onSubmit={onSubmit}>
         <AppBar sx={{position: 'fixed'}}>
           <Toolbar>
-            <Typography variant='h6'>Login Screen</Typography>
+            <Typography variant='h6'>Register</Typography>
             <IconButton
               sx={{marginLeft: 'auto'}}
               aria-label='close'
             >
             </IconButton>
+            <Button
+              variant='contained'
+              type='submit'
+              sx={{width: '7%'}}
+              href="./home">
+              Home
+            </Button>
           </Toolbar>
         </AppBar>
         <div className={styles.login_box}>
@@ -100,13 +99,7 @@ const Login = () => {
             type='submit'
             // onClick={onSubmit}
             sx={{my: '3%', width: '300px'}}>
-            Login
-          </Button>
-          <Button
-            variant='contained'
-            href='/newaccount'
-            sx={{width: '300px'}}>
-            New User
+            Register
           </Button>
           <Typography variant='subtitle1'>
           </Typography>
@@ -116,4 +109,14 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Register;
+
+// const LoginWrapper = () => {
+//   return (
+//     <Router>
+//       <Login />
+//     </Router>
+//   );
+// };
+
+// export default LoginWrapper;

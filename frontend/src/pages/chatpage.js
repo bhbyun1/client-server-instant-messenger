@@ -2,12 +2,15 @@
 // import HttpCall from "./components/HttpCall";
 import WebSocketCall from "./components/WebSocketCall";
 import { io } from "socket.io-client";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
+import CreateChat from "./components/CreateChat";
 
 function Chatpage() {
   const [socketInstance, setSocketInstance] = useState("");
   const [loading, setLoading] = useState(true);
   const [showChat, setShowChat] = useState(false);
+  const [showCreateChat, setShowCreateChat] = useState(0);
+  const [selectedValue, setSelectedValue] = useState([]);
 
   const showChatClick = () => {
     if (!showChat) {
@@ -16,6 +19,22 @@ function Chatpage() {
       setShowChat(false);
     }
   };
+
+  const hideCreateChatClick =(value) => {
+    setShowCreateChat(false);
+    setSelectedValue(value);
+    console.log(value);
+  }
+
+  const showCreateChatClick = () => {
+    if (!showCreateChat) {
+      setShowCreateChat(true);
+    } else {
+      setShowCreateChat(false);
+    }
+    console.log("now isssa " + showCreateChat);
+    // setShowCreateChat(true);
+  }
 
   useEffect(() => {
     if (showChat) {
@@ -48,6 +67,13 @@ function Chatpage() {
           <div>
             {!loading && <WebSocketCall socket={socketInstance} />}
           </div>
+          {/* {showCreateChat && <CreateChat setShowCreateChat={setShowCreateChat}/>} */}
+          <CreateChat
+            selectedValue={selectedValue}
+            open={showCreateChat}
+            onClose={showCreateChatClick}
+          />
+          <button onClick={showCreateChatClick}>Create Chat</button>
         </>
       )}
     </div>
