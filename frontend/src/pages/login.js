@@ -48,15 +48,17 @@ const Login = () => {
       headers: headers,
       method: 'POST',
       body: JSON.stringify({ 'username': username, 'password': password })
-    }).then(function (response) {
-      if (response.ok) {
-        return response.json();
+    }).then((response) => response.json())
+    .then((response) => {
+      if (response.token) {
+        sessionStorage.setItem('token', response['token'])
+        sessionStorage.setItem('Username', username);
+        router.push('http://localhost:3000/chatpage');
+        return response;
+      } else {
+        // TODO: Maybe show alert that username and password are wrong
+        router.reload();
       }
-      throw response;
-    }).then(function (data) {
-      console.log(data);
-    }).catch(function (error) {
-      console.warn(error);
     });
   };
   
