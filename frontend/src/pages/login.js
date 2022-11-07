@@ -82,6 +82,7 @@ const Login = () => {
             title='username'
             label='username'
             name='username'
+            type='password'
             onChange={handleInputChange}
             required
             sx={{my: '2%', width: '300px'}}
