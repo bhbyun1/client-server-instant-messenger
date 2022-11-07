@@ -17,33 +17,26 @@ import Box from '@mui/material/Box';
 // import {BrowserRouter as Router} from 'react-router-dom';
 import useRouter from 'next/router';
 // import Router from "react-router-dom";
+import bcrypt from 'bcryptjs';
 
-const Login = () => {
-  const [user, setUser] = React.useState({username: '', password: ''});
+const Register = () => {
   // updates state for displaying eror when email/password is incorrect
-  const [error, setError] = React.useState('');
   // used to update the log out button to appear after logging in
   // const {setVisible} = useContext(CategoryContext);
   // used to go back to the main home page and goto new account page
   // const history = useNavigate();
   const router = useRouter;
+  let user = {username: '', password: ''}
   const handleInputChange = (event) => {
-    // grabs data from input boxes
     const {value, name} = event.target;
-    // grabs from the user state
-    const u = user;
-    // u[name] is the actual input
-    u[name] = value;
-    // sets the state defined above
-    setUser(u);
+    user[name] = value;
   };
 
   const onSubmit = (event) => {
     event.preventDefault();
+    const username = user.username;
+    const password = user.password;
     // checks with db that user exists
-    let username = user.username;
-    let password = user.password;
-
     fetch('http://localhost:5000/user', {
       headers: {
         'Content-Type': 'application/json'
@@ -116,7 +109,7 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Register;
 
 // const LoginWrapper = () => {
 //   return (
