@@ -1,8 +1,6 @@
 """defines data schema"""
-import json
 from sqlalchemy import Column, Integer, String, ForeignKey, Table, Boolean, DateTime
 from sqlalchemy.orm import declarative_base, relationship
-
 
 Base = declarative_base()
 
@@ -38,7 +36,7 @@ class User(Base):
     def __repr__(self):
         return f"User(id={self.id!r}, name={self.username!r}, password={self.password!r})"
 
-    def as_json_string(self):
+    def as_dict(self):
         """
         Returns the user parameters as a JSON string
         """
@@ -71,7 +69,7 @@ class Chatroom(Base):
     )
 
     def __repr__(self) -> str:
-        return f"Chatroom(id={self.id!r}, name={self.name!r}, owner={self.owner.name!r})"
+        return f"Chatroom(id={self.id!r}, name={self.name!r}, owner={self.owner.username!r})"
 
 
 class Message(Base):
