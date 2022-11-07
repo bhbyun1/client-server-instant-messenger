@@ -43,15 +43,15 @@ const Register = () => {
       },
       method: 'POST',
       body: JSON.stringify({ 'username': username, 'password': password })
-    }).then(function (response) {
-      if (response.ok) {
-        return response.json();
+    }).then((response) => response.json())
+    .then((response) => {
+      if (response.message == 'Registration successful') {
+        router.push('http://localhost:3000/login');
+        return response;
+      } else {
+        // TODO: Maybe show alert that registration failed
+        router.reload();
       }
-      throw response;
-    }).then(function (data) {
-      console.log(data);
-    }).catch(function (error) {
-      console.warn(error);
     });
   };
 
