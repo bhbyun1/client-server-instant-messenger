@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import ConversationPanel from "./ConversationPanel";
+import Message from './Message';
 import IconButton from '@mui/material/IconButton';
 import TextField from '@mui/material/TextField';
 import InputAdornment from '@mui/material/InputAdornment';
@@ -43,15 +44,7 @@ export default function WebSocketCall({ socket }) {
           <div className={styles.message_list}>
             {messages.map((data, ind) => {
               return (
-                <div className={styles.message} key={ind}>
-                  <div className={styles.username}>
-                    {data['username']}
-                  </div>
-                  <div>
-                    {data['message']}
-                  </div>
-                  <br/>
-                </div>
+                <Message key={ind} message={{'data': data, 'ind': ind, 'length': messages.length}} />
               );
             })}
           </div>
