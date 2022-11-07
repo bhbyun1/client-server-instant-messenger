@@ -37,12 +37,17 @@ const Login = () => {
   const onSubmit = (event) => {
     event.preventDefault();
     // checks with db that user exists
-    let username = user.username;
-    let password = user.password;
+    const username = user.username;
+    const password = user.password;
+    
+    let headers = new Headers();
+    headers.set('Content-Type', 'application/json');
+    headers.set('Authorization', 'Basic ' + Buffer.from(username + ":" + password).toString('base64'));
 
     fetch('http://localhost:5000/login', {
+      headers: headers,
       method: 'POST',
-      body: { 'username': username, 'password': password }
+      body: JSON.stringify({ 'username': username, 'password': password })
     }).then(function (response) {
       if (response.ok) {
         return response.json();
@@ -84,6 +89,7 @@ const Login = () => {
             title='password'
             label='password'
             name='password'
+            onChange={handleInputChange}
             required
             sx={{my: '3%', width: '300px'}}
           />
