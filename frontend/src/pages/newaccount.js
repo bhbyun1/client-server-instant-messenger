@@ -45,8 +45,11 @@ const Login = () => {
     let password = user.password;
 
     fetch('http://localhost:5000/user', {
+      headers: {
+        'Content-Type': 'application/json'
+      },
       method: 'POST',
-      body: { 'username': username, 'password': password }
+      body: JSON.stringify({ 'username': username, 'password': password })
     }).then(function (response) {
       if (response.ok) {
         return response.json();
@@ -94,6 +97,7 @@ const Login = () => {
             title='password'
             label='password'
             name='password'
+            onChange={handleInputChange}
             required
             sx={{my: '3%', width: '300px'}}
           />
