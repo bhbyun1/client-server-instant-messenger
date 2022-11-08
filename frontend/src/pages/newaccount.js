@@ -69,8 +69,8 @@ const Register = () => {
               variant='contained'
               type='submit'
               sx={{width: '7%'}}
-              href="./home">
-              Home
+              href="./login">
+              Login
             </Button>
           </Toolbar>
         </AppBar>
