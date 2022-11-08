@@ -14,11 +14,7 @@ function Home() {
   const router = useRouter;
 
   useEffect(() => {
-    if (localStorage.getItem("Username")) {
-        router.push('/chatpage');
-    } else {
-        router.push('/newaccount');
-    }
+    router.push(localStorage.getItem("Username") ? '/chatpage' : '/newaccount');
   });
 };
 
