@@ -90,6 +90,7 @@ const Register = () => {
             title='password'
             label='password'
             name='password'
+            type='password'
             onChange={handleInputChange}
             required
             sx={{my: '3%', width: '300px'}}
