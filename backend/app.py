@@ -11,7 +11,7 @@ from sqlalchemy import exc
 from werkzeug.security import check_password_hash, generate_password_hash
 from dotenv import load_dotenv
 import jwt
-from db.model import User, Message, Chatroom
+from db.model import User, Chatroom
 
 load_dotenv()
 app = Flask(__name__)
@@ -22,15 +22,55 @@ CORS(app, resources={r"/*": {"origins": "*"}})
 socketio = SocketIO(app, cors_allowed_origins="*")
 
 
+@app.route('/initdb')
+def init_db():
+    """workaround to init the db with first admin and first chatroom"""
+    first_chat = db.session.execute(
+        db.select(Chatroom).order_by(Chatroom.id)).one_or_none()
+    admin_user = db.session.execute(
+        db.select(User).filter_by(username='admin')).one_or_none()
+
+    if not admin_user:
+        hashed_password = generate_password_hash(
+            environ.get('ADMIN_PW'), method='sha256')
+        admin = User(username='admin',
+                     fullname='admin',
+                     password=hashed_password,
+                     admin=True)
+        db.session.add(admin)
+        db.session.commit()
+        admin_user = admin
+
+    if not first_chat:
+        new_chat = Chatroom(
+            name='general',
+            owner_id=admin_user.id,
+            owner=admin_user,
+            users=[admin_user]
+        )
+        db.session.add(new_chat)
+        db.session.commit()
+        first_chat = new_chat
+    data = {'data': 'Initialized. Secret token is ' + app.config['SECRET']}
+    return jsonify(data)
+
+
 def authenticate(func):
-    """Wrapper function to authenticate routes"""
+    """validates the jwt to authenticate the user
+
+    Args:
+        func (function): The function that needs auth
+
+    Returns:
+        function: The same function, authenticated
+    """
     @wraps(func)
     def wrapper(*args, **kwargs):
         token = None
         if 'x-access-token' in request.headers:
             token = request.headers['x-access-token']
         if not token:
-            return jsonify({'message': 'You must be logged in to access this page'}), 401
+            return jsonify({'message': 'You must be logged in to access this data'}), 401
         try:
             data = jwt.decode(
                 token, app.config['SECRET'], algorithms=["HS256"])
@@ -67,21 +107,6 @@ def handle_message(data):
 @app.route("/")
 def root():
     """returns object with filler data"""
-    ##################################################
-    # TEMP TO CLEAR USERS AS MODEL IS BEING UPDATED
-    ##################################################
-    # This deletes all the users from the Users table
-    # try:
-    #     db.session.query(User).delete()
-    #     db.session.commit()
-    #     print("users deleted")
-    # except:
-    #     db.session.rollback()
-    #     print("users not deleted")
-    ##################################################
-    # END TEMP
-    ##################################################
-
     data = {'data': 'Root accessed. Secret token is ' + app.config['SECRET']}
     return jsonify(data)
 
@@ -105,14 +130,24 @@ def register():
         return jsonify({'message': 'Invalid Request'}), 400
     hashed_password = generate_password_hash(data['password'], method='sha256')
 
+    first_chatroom = db.session.execute(
+        db.select(Chatroom).order_by(Chatroom.id)).scalars().first()
+
+    if not first_chatroom:
+        init_db()
+        first_chatroom = db.session.execute(db.select(Chatroom)
+                                            .order_by(Chatroom.id)).scalars().first()
+
     new_user = User(username=data['username'],
-                    password=hashed_password, admin=False)
+                    password=hashed_password,
+                    admin=False)
+    new_user.chatrooms.append(first_chatroom)
     try:
         db.session.add(new_user)
         db.session.commit()
     except exc.IntegrityError:
         return jsonify({'message': 'Invalid Username'}), 400
-    return jsonify({'message': 'Registration successful', 'user': new_user.as_json_string()}), 201
+    return jsonify({'message': 'Registration successful', 'user': new_user.as_dict()}), 201
 
 
 @app.route('/login', methods=['POST'])
@@ -127,10 +162,8 @@ def login():
     user = db.session.execute(
         db.select(User).filter_by(username=auth.username)).first()
 
-    print(f"user is {user}")
-
     login_fail = make_response('Invalid username or password', 401, {
-                                       'Authentication': 'Login required'})
+        'Authentication': 'Login required'})
     if not user:
         return login_fail
 
@@ -142,8 +175,79 @@ def login():
             },
             app.config['SECRET'],
             "HS256")
-        return jsonify({'token': token.decode("utf-8")})
+        return jsonify({'token': token})
     return login_fail
+
+
+@app.route('/chat', methods=['POST'])
+@authenticate
+def create_chatroom(user):
+    """create chatroom"""
+    data = request.get_json()
+    if not data['name'] or not data['owner']:
+        return jsonify({'message': 'Invalid Request'}), 400
+    new_chatroom = Chatroom(
+        name=data['name'],
+        owner=user)
+    try:
+        db.session.add(new_chatroom)
+        db.session.commit()
+    except exc.SQLAlchemyError as err:
+        return jsonify({'message': 'Invalid Username', 'e': err}), 409
+    return jsonify({'message': 'Chatroom created'}), 201
+
+
+@app.route('/chat/<chat_id>', methods=['GET'])
+@authenticate
+def get_chat_history(user, chat_id):
+    """Gets the chat history if the user is in the chat or the user is an admin
+
+    Args:
+        user (User): The authenticated user making the request
+        chat_id (int): ID for the chatroom to join
+
+    Returns:
+        flask.Response: The Response object
+    """
+    # error_response = make_response('Error processing request', 400)
+    not_found = make_response('Not Found', 404)
+    chatroom = db.session.execute(
+        db.select(Chatroom).filter_by(id=chat_id)
+    ).scalars().one_or_none()
+    if not chatroom:
+        return not_found
+    # if not user in chatroom.users:
+    #     return error_response
+    print(str(chatroom))
+    return jsonify(), 204
+
+
+@app.route('/chat/<chat_id>', methods=['POST'])
+@authenticate
+def join_chat(user, chat_id):
+    """Attempts to join the user to the specified chat
+
+    Args:
+        user (User): The authenticated user making the request
+        chat_id (int): ID for the chatroom to join
+
+    Returns:
+        flask.Response: The Response object
+    """
+    error_response = make_response('Error processing request', 500)
+    not_found = make_response('Not Found', 404)
+    chatroom = db.session.execute(
+        db.select(Chatroom).filter_by(id=chat_id)
+    ).first()
+    if not chatroom:
+        return not_found
+    chatroom.users.append(user)
+    try:
+        db.session.add(chatroom)
+        db.session.commit()
+    except exc.SQLAlchemyError as err:
+        return error_response, err
+    return jsonify({'message': 'Joined chatroom'}), 204
 
 
 if __name__ == '__main__':
