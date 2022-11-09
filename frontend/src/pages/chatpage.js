@@ -4,11 +4,12 @@ import WebSocketCall from "./components/WebSocketCall";
 import { io } from "socket.io-client";
 import React, { useEffect, useState } from "react";
 import CreateChat from "./components/CreateChat";
+import { AppBar, Toolbar, Typography, Button, IconButton } from "@mui/material";
 
 function Chatpage() {
   const [socketInstance, setSocketInstance] = useState("");
   const [loading, setLoading] = useState(true);
-  const [showChat, setShowChat] = useState(false);
+  const [showChat, setShowChat] = useState(true);
   const [showCreateChat, setShowCreateChat] = useState(0);
   const [selectedValue, setSelectedValue] = useState([]);
 
@@ -36,6 +37,11 @@ function Chatpage() {
     // setShowCreateChat(true);
   }
 
+  const clearCredentials = () => {
+    sessionStorage.removeItem('token');
+    sessionStorage.removeItem('Username');
+  }
+
   useEffect(() => {
     if (showChat) {
       const socket = io("127.0.0.1:5000/", {
@@ -56,26 +62,38 @@ function Chatpage() {
 
   return (
     <div className="App">
+      <AppBar sx={{position: 'fixed', margin: '0', width: '100%'}}>
+        <Toolbar>
+          <Typography variant='h6'>Login Screen</Typography>
+          <IconButton
+          sx={{marginLeft: 'auto'}}
+          aria-label='close'
+          >
+          </IconButton>
+          <Button
+              variant='contained'
+              type='submit'
+              sx={{width: '7%', float: 'left'}}
+              onClick={clearCredentials}
+              href="./login">
+              Logout
+          </Button>
+        </Toolbar>
+      </AppBar>
       <div>
-        {/* <HttpCall /> */}
+        <div>
+          {!loading && <WebSocketCall socket={socketInstance} />}
+        </div>
+        <CreateChat
+          selectedValue={selectedValue}
+          open={showCreateChat}
+          onClose={showCreateChatClick}
+        />
+        <Button
+          variant='contained'
+          onClick={showCreateChatClick}
+        >Create Chat</Button>
       </div>
-      {!showChat ? (
-        <button onClick={showChatClick}>Chat On</button>
-      ) : (
-        <>
-          <button onClick={showChatClick}>Chat Off</button>
-          <div>
-            {!loading && <WebSocketCall socket={socketInstance} />}
-          </div>
-          {/* {showCreateChat && <CreateChat setShowCreateChat={setShowCreateChat}/>} */}
-          <CreateChat
-            selectedValue={selectedValue}
-            open={showCreateChat}
-            onClose={showCreateChatClick}
-          />
-          <button onClick={showCreateChatClick}>Create Chat</button>
-        </>
-      )}
     </div>
   );
 }

@@ -1,4 +1,4 @@
-import { Box, ButtonGroup, Button, Typography } from "@mui/material";
+import { Box, ButtonGroup, Button, Typography, Autocomplete, TextField } from "@mui/material";
 import React from "react";
 import styles from '../../styles.module.css';
 import createMuiTheme from "@mui/material/styles";
@@ -7,13 +7,28 @@ import { useState } from 'react'
 function ConversationPanel() {
     const [users, setUsers] = React.useState(["Adam", "Bob", "Claire"]);
 
+    const handleAutocomplete = (event, value) => {
+        // setUsers(value);
+        console.log(value);
+    }
+
     return(
         <Box sx={{
+            flexDirection: 'column',
             display: 'flex',
             '& > *': { 
                 m: 1,}, 
         }}>
-            <ButtonGroup
+            <Typography>
+                Select a User
+            </Typography>
+            <Autocomplete
+                    options={users}
+                    sx={{ width: 300 }}
+                    onChange={handleAutocomplete}
+                    renderInput={(params) => <TextField {...params} variant="filled" label="Users"/>}
+                />
+            {/* <ButtonGroup
             orientation="vertical"
             aria-label="vertical outlined button group"
             >
@@ -22,7 +37,7 @@ function ConversationPanel() {
                 {users.map((user) =>
                     <Button sx={{width: "125%"}} key={user}>{user}</Button>
                 )}
-            </ButtonGroup>
+            </ButtonGroup> */}
         </Box>
     )
 }
