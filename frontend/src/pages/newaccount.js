@@ -56,7 +56,7 @@ const Register = () => {
         </AppBar>
         {showError && <Alert severity="error">
           <AlertTitle>Error</AlertTitle>
-          Registration failed. A username with that account already exists.
+          Registration failed. An account with that username already exists.
         </Alert>}
         <div className={styles.login_box}>
         <Box sx={{my: '10%', display: 'flex', justifyContent: 'center', flexDirection: 'column'}}>
