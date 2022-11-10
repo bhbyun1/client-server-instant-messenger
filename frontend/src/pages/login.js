@@ -82,7 +82,6 @@ const Login = () => {
             title='username'
             label='username'
             name='username'
-            type='password'
             onChange={handleInputChange}
             required
             sx={{my: '2%', width: '300px'}}
@@ -92,6 +91,7 @@ const Login = () => {
             title='password'
             label='password'
             name='password'
+            type='password'
             onChange={handleInputChange}
             required
             sx={{my: '3%', width: '300px'}}

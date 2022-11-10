@@ -4,6 +4,7 @@ import WebSocketCall from "./components/WebSocketCall";
 import { io } from "socket.io-client";
 import React, { useEffect, useState } from "react";
 import CreateChat from "./components/CreateChat";
+import { Button, AppBar, Toolbar, Typography, IconButton } from '@mui/material';
 
 function Chatpage() {
   const [socketInstance, setSocketInstance] = useState("");
@@ -56,6 +57,29 @@ function Chatpage() {
 
   return (
     <div className="App">
+      <AppBar sx={{position: 'sticky'}}>
+        <Toolbar>
+          <Typography variant='h6'>Chat</Typography>
+          <IconButton
+            sx={{marginLeft: 'auto'}}
+            aria-label='close'>
+          </IconButton>
+          <Button
+            variant='contained'
+            type='submit'
+            sx={{width: '7%'}}
+            href='/login'
+            color='error'
+            onClick={() => {
+              sessionStorage.removeItem('Username');
+              sessionStorage.removeItem('token');
+            }}
+          >
+            Logout
+          </Button>
+        </Toolbar>
+      </AppBar>
+      <br></br>
       <div>
         {/* <HttpCall /> */}
       </div>
