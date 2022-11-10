@@ -1,27 +1,13 @@
 import React, {useContext} from "react";
 import styles from '../styles.module.css'
-import { Button, Grid, Paper, Card } from '@mui/material';
-import SignIn from './signIn.js'
-import AppBar from '@mui/material/AppBar';
-import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
-// import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
-// import CloseIcon from '@mui/icons-material/Close';
-import IconButton from '@mui/material/IconButton';
-// import CategoryContext from './CategoryContext';
-// import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import Box from '@mui/material/Box';
-// import styles from '../styles.module.css'
-// import {useNavigate} from 'react-router-dom';
-// import {BrowserRouter as Router} from 'react-router-dom';
+import { Button, AppBar, Toolbar, Typography, TextField, IconButton, Box, Alert, AlertTitle } from '@mui/material';
 import useRouter from 'next/router';
 // import Router from "react-router-dom";
 
 const Login = () => {
   const [user, setUser] = React.useState({username: '', password: ''});
   // updates state for displaying eror when email/password is incorrect
-  const [error, setError] = React.useState('');
+  const [showError, setShowError] = React.useState(false);
   const router = useRouter;
   const handleInputChange = (event) => {
     // grabs data from input boxes
@@ -42,6 +28,7 @@ const Login = () => {
     
     let headers = new Headers();
     headers.set('Content-Type', 'application/json');
+    headers.set('Accept', 'application/json');
     headers.set('Authorization', 'Basic ' + Buffer.from(username + ":" + password).toString('base64'));
 
     fetch('http://localhost:5000/login', {
@@ -56,8 +43,7 @@ const Login = () => {
         router.push('http://localhost:3000/chatpage');
         return response;
       } else {
-        // TODO: Maybe show alert that username and password are wrong
-        router.reload();
+        setShowError(true);
       }
     });
   };
@@ -65,7 +51,7 @@ const Login = () => {
 
   return (
     <form onSubmit={onSubmit}>
-        <AppBar sx={{position: 'fixed'}}>
+        <AppBar sx={{position: 'sticky'}}>
           <Toolbar>
             <Typography variant='h6'>Login Screen</Typography>
             <IconButton
@@ -75,6 +61,10 @@ const Login = () => {
             </IconButton>
           </Toolbar>
         </AppBar>
+        {showError && <Alert severity="error">
+          <AlertTitle>Error</AlertTitle>
+          Login failed. Invalid username or password.
+        </Alert>}
         <div className={styles.login_box}>
         <Box sx={{my: '10%', display: 'flex', justifyContent: 'center', flexDirection: 'column'}}>
           <TextField
