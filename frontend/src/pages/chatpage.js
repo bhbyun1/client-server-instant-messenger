@@ -75,7 +75,7 @@ function Chatpage() {
               sessionStorage.removeItem('token');
             }}
           >
-            Logout
+          Logout
           </Button>
         </Toolbar>
       </AppBar>

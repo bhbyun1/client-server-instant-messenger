@@ -1,6 +1,6 @@
 import React, {useContext} from "react";
 import styles from '../styles.module.css'
-import { Button, Grid, Paper, Card } from '@mui/material';
+import { Button, Grid, Paper, Card, Alert, AlertTitle } from '@mui/material';
 import SignIn from './signIn.js'
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
@@ -26,6 +26,7 @@ const Register = () => {
   // used to go back to the main home page and goto new account page
   // const history = useNavigate();
   const router = useRouter;
+  const [showError, setShowError] = React.useState(false);
   let user = {username: '', password: ''}
   const handleInputChange = (event) => {
     const {value, name} = event.target;
@@ -49,15 +50,14 @@ const Register = () => {
         router.push('http://localhost:3000/login');
         return response;
       } else {
-        // TODO: Maybe show alert that registration failed
-        router.reload();
+        setShowError(true);
       }
     });
   };
 
   return (
     <form onSubmit={onSubmit}>
-        <AppBar sx={{position: 'fixed'}}>
+        <AppBar sx={{position: 'sticky'}}>
           <Toolbar>
             <Typography variant='h6'>Register</Typography>
             <IconButton
@@ -74,6 +74,10 @@ const Register = () => {
             </Button>
           </Toolbar>
         </AppBar>
+        {showError && <Alert severity="error">
+          <AlertTitle>Error</AlertTitle>
+          Registration failed. A username with that account already exists.
+        </Alert>}
         <div className={styles.login_box}>
         <Box sx={{my: '10%', display: 'flex', justifyContent: 'center', flexDirection: 'column'}}>
           <TextField
