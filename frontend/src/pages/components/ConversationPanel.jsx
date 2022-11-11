@@ -4,11 +4,18 @@ import styles from '../../styles.module.css';
 import createMuiTheme from "@mui/material/styles";
 import { useState } from 'react'
 
-function ConversationPanel() {
+function ConversationPanel({setMessages}) {
     const [users, setUsers] = React.useState(["Adam", "Bob", "Claire"]);
+    const mockData = {"Adam": [{'username': 'Adam', 'message': 'I\'m Adam'}],
+                      "     ": [{'username': 'Bob', 'message': 'I\'m Bob'}],
+                      "Claire": [{'username': 'Claire', 'message': 'I\'m Claire'}]};
+    // Endpoint for <id> chat
+    // Endpoint for all chat name
 
     const handleAutocomplete = (event, value) => {
         // setUsers(value);
+        // fetch endpoint for <id> chat history
+        setMessages(mockData[value]);
         console.log(value);
     }
 

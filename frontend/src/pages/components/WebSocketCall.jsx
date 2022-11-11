@@ -10,6 +10,7 @@ import styles from '../../styles.module.css';
 export default function WebSocketCall({ socket }) {
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([{'username': '', 'message': ''}]);
+  // endpoint to end message to db
 
   const handleText = (e) => {
     const inputMessage = e.target.value;
@@ -25,6 +26,7 @@ export default function WebSocketCall({ socket }) {
   };
 
   useEffect(() => {
+    console.log(messages);
     socket.on("data", (data) => {
       setMessages([...messages, data.data]);
     });
@@ -38,7 +40,7 @@ export default function WebSocketCall({ socket }) {
   return (
     <div>
       <h2>WebSocket Communication</h2>
-      <ConversationPanel />
+      <ConversationPanel setMessages={setMessages}/>
       <div className={styles.conversation_container}>
         <div className={styles.conversation}>
           <div className={styles.message_list}>
