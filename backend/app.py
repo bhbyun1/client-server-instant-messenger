@@ -162,8 +162,7 @@ def login():
     user = db.session.execute(
         db.select(User).filter_by(username=auth.username)).first()
 
-    login_fail = make_response('Invalid username or password', 401, {
-        'Authentication': 'Login required'})
+    login_fail = jsonify({'message': 'Invalid username or password'}), 401
     if not user:
         return login_fail
 
@@ -175,7 +174,7 @@ def login():
             },
             app.config['SECRET'],
             "HS256")
-        return jsonify({'token': token})
+        return jsonify({'token': str(token)})
     return login_fail
 
 
