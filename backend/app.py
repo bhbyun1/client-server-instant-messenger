@@ -75,7 +75,7 @@ def authenticate(func):
             data = jwt.decode(
                 token, app.config['SECRET'], algorithms=["HS256"])
             current_user = db.session.execute(
-                db.select(User).filter_by(id=data['id'])).one()
+                db.select(User).filter_by(id=data['id'])).scalar_one()
         except (jwt.InvalidIssuedAtError, jwt.ExpiredSignatureError, exc.SQLAlchemyError):
             return jsonify({'message': 'Invalid Login'}), 401
         return func(current_user, *args, **kwargs)
@@ -111,7 +111,7 @@ def root():
     return jsonify(data)
 
 
-@app.route('/user')
+@app.route('/user', methods=['GET'])
 @authenticate
 def get_users(user):
     """doc string"""
@@ -175,6 +175,8 @@ def login():
             },
             app.config['SECRET'],
             "HS256")
+        if not isinstance(token, str):
+            token = token.decode('utf-8')
         return jsonify({'token': token})
     return login_fail
 
@@ -184,11 +186,18 @@ def login():
 def create_chatroom(user):
     """create chatroom"""
     data = request.get_json()
-    if not data['name'] or not data['owner']:
+    if not data['name'] or not data['users']:
         return jsonify({'message': 'Invalid Request'}), 400
+
+    chatroom_users = db.session.execute(
+        db.select(User).where(User.username.in_(data['users']))
+    ).scalars()
+    chatroom_users = list(chatroom_users)
     new_chatroom = Chatroom(
         name=data['name'],
-        owner=user)
+        owner=user,
+        users=chatroom_users
+    )
     try:
         db.session.add(new_chatroom)
         db.session.commit()
