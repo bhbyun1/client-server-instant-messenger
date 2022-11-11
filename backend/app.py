@@ -214,9 +214,9 @@ def create_chatroom(user):
         owner_id=user.id)
     new_chatroom.users.append(user)
     if (data['users']):
-        for user_id in data['users']:
+        for username in data['users']:
             joining_user = db.session.execute(
-                db.select(User).filter_by(id=user_id)
+                db.select(User).filter_by(username=username)
             ).scalars().one_or_none()
             if joining_user:
                 new_chatroom.users.append(joining_user)
