@@ -5,7 +5,7 @@ from functools import wraps
 from os import environ
 from flask import Flask, request, make_response, jsonify
 from flask_sqlalchemy import SQLAlchemy
-from flask_socketio import SocketIO, emit
+from flask_socketio import SocketIO, emit, join_room
 from flask_cors import CORS
 from sqlalchemy import exc
 from werkzeug.security import check_password_hash, generate_password_hash
@@ -75,22 +75,29 @@ def authenticate(func):
             data = jwt.decode(
                 token, app.config['SECRET'], algorithms=["HS256"])
             current_user = db.session.execute(
-                db.select(User).filter_by(id=data['id'])).one()
+                db.select(User).filter_by(id=data['id'])).scalars().one()
         except (jwt.InvalidIssuedAtError, jwt.ExpiredSignatureError, exc.SQLAlchemyError):
             return jsonify({'message': 'Invalid Login'}), 401
         return func(current_user, *args, **kwargs)
     return wrapper
 
 
+# def authenticate_user(context):
+#     if context['']
+
+
 @socketio.on("connect")
-def on_connect():
+def connect(sid):
     """listener for connection events"""
-    print("client has connected " + request.sid)
-    emit("connect", {"data": f"id: {request.sid} is connected"})
+    # print(f"environ is {environ}")
+    print(f"sid is {request.sid}")
+    # username = authenticate_user(context)
+    print(f"client has connected: sid: {request.sid}, username: username")
+    emit("connect", {"data": f"LOG: username is connected"})
 
 
 @socketio.on("disconnect")
-def on_disconnect():
+def disconnect():
     """listener for disconnect events"""
     print("client has disconnected " + request.sid)
     emit("disconnect", {
@@ -100,7 +107,24 @@ def on_disconnect():
 @socketio.on('data')
 def handle_message(data):
     """listener for data events"""
+    print("data from the front end: ", type(data))
+    emit("data", {'data': data, 'id': request.sid}, broadcast=True)
+
+
+@socketio.on('join')
+def handle_join(data):
+    """listener for data events"""
     print("data from the front end: ", str(data))
+    if not data['username'] or not data['token']:
+        return False
+    try:
+        token = jwt.decode(
+            data['token'], app.config['Secret'], algorithms=["HS256"])
+        user = db.session.execute(db.select(User).filter_by(
+            id=token['id'])).scalars().one()
+    except (jwt.InvalidIssuedAtError, jwt.ExpiredSignatureError, exc.SQLAlchemyError):
+        return False, 401
+
     emit("data", {'data': data, 'id': request.sid}, broadcast=True)
 
 
@@ -183,11 +207,19 @@ def login():
 def create_chatroom(user):
     """create chatroom"""
     data = request.get_json()
-    if not data['name'] or not data['owner']:
+    if not data['name']:
         return jsonify({'message': 'Invalid Request'}), 400
     new_chatroom = Chatroom(
         name=data['name'],
-        owner=user)
+        owner_id=user.id)
+    new_chatroom.users.append(user)
+    if (data['users']):
+        for username in data['users']:
+            joining_user = db.session.execute(
+                db.select(User).filter_by(username=username)
+            ).scalars().one_or_none()
+            if joining_user:
+                new_chatroom.users.append(joining_user)
     try:
         db.session.add(new_chatroom)
         db.session.commit()
@@ -237,7 +269,7 @@ def join_chat(user, chat_id):
     not_found = make_response('Not Found', 404)
     chatroom = db.session.execute(
         db.select(Chatroom).filter_by(id=chat_id)
-    ).first()
+    ).scalars().one_or_none()
     if not chatroom:
         return not_found
     chatroom.users.append(user)
