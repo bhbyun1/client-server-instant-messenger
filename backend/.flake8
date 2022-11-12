@@ -1,0 +1,4 @@
+[flake8]
+exclude = .git,__pycache__,alembic
+max-complexity = 10
+per-file-ignores = app.py:F403,F401
