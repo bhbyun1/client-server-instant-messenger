@@ -217,7 +217,7 @@ def get_chatrooms(user):
         db.select(Chatroom).order_by(Chatroom.id)).scalars()
     chats = list(chats)
     print(chats)
-    d = [{"id": c.id,
+    d = [{"public_id": str(c.public_id),
           "name": c.name,
           "owner": c.owner.username,
           "users": [u.username for u in c.users]} for c in chats]
