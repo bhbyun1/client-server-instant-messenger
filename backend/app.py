@@ -198,7 +198,9 @@ def login():
             },
             app.config['SECRET'],
             "HS256")
-        return jsonify({'token': str(token)})
+        if not isinstance(token, str):
+            token = token.decode('utf-8')
+        return jsonify({'token': token})
     return login_fail
 
 
@@ -226,6 +228,19 @@ def create_chatroom(user):
     except exc.SQLAlchemyError as err:
         return jsonify({'message': 'Invalid Username', 'e': err}), 409
     return jsonify({'message': 'Chatroom created'}), 201
+
+
+@app.route('/chat', methods=['GET'])
+@authenticate
+def get_chatrooms(user):
+    chats = db.session.execute(db.select(Chatroom).order_by(Chatroom.id)).scalars()
+    chats = list(chats)
+    print(chats)
+    d = [{"id": c.id,
+          "name": c.name,
+          "owner": c.owner.username,
+          "users": [u.username for u in c.users]} for c in chats]
+    return jsonify({"chatrooms": d}), 200
 
 
 @app.route('/chat/<chat_id>', methods=['GET'])
