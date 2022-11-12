@@ -47,7 +47,25 @@ function ConversationPanel({setMessages}) {
     // replace this mock data with a fetch, probably in useeffect
 
     useEffect(() => {
-        let chatroomList = accurateMockData["chatrooms"];
+        let chatroomList = []
+        // let headers = new Headers();
+        // headers.set('Content-Type', 'application/json');
+        // headers.set('Accept', 'application/json');
+        // headers.set('x-access-token', sessionStorage.token);
+        //
+        // fetch('http://localhost:5000/chat/', {
+        // headers: headers,
+        // method: 'GET',
+        // }).then((response) => response.json())
+        // .then((response) => {
+        // if (response.token) {
+        //     chatroomList = response["chatrooms"];
+        //     return response;
+        // } else {
+        //     setShowError(true);
+        // }
+        // });
+        // let chatroomList = accurateMockData["chatrooms"];
         let displayChatroom = []
         for (let i = 0; i < chatroomList.length; i++) {
             let chatroom = chatroomList[i];
@@ -67,10 +85,24 @@ function ConversationPanel({setMessages}) {
 
         setMessages([{"username": "Johnny", "message": "hey im johnny"}]);
         // call fetch chatid history api here instead of the above setmessages, using value["id"]
-        console.log("adhiud");
-        console.log(value);
-        console.log(value["id"]);
-        console.log(value["label"])
+
+        // let headers = new Headers();
+        // headers.set('Content-Type', 'application/json');
+        // headers.set('Accept', 'application/json');
+        // headers.set('x-access-token', sessionStorage.token);
+        //
+        // fetch('http://localhost:5000/chat/' + value["id"], {
+        // headers: headers,
+        // method: 'GET',
+        // }).then((response) => response.json())
+        // .then((response) => {
+        // if (response.token) {
+        //     setMessages(response) // probably need to edit this, i dont know the shape of the data
+        //     return response;
+        // } else {
+        //     setShowError(true);
+        // }
+        // });
     }
     
     // const autocompleteOnInputChange = (event, value) => {
