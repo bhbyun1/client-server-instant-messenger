@@ -9,7 +9,7 @@ import { Button, AppBar, Toolbar, Typography, IconButton } from '@mui/material';
 function Chatpage() {
   const [socketInstance, setSocketInstance] = useState("");
   const [loading, setLoading] = useState(true);
-  const [showChat, setShowChat] = useState(false);
+  const [showChat, setShowChat] = useState(true);
   const [showCreateChat, setShowCreateChat] = useState(0);
   const [selectedValue, setSelectedValue] = useState([]);
 
@@ -83,11 +83,6 @@ function Chatpage() {
       <div>
         {/* <HttpCall /> */}
       </div>
-      {!showChat ? (
-        <button onClick={showChatClick}>Chat On</button>
-      ) : (
-        <>
-          <button onClick={showChatClick}>Chat Off</button>
           <div>
             {!loading && <WebSocketCall socket={socketInstance} />}
           </div>
@@ -98,8 +93,6 @@ function Chatpage() {
             onClose={showCreateChatClick}
           />
           <button onClick={showCreateChatClick}>Create Chat</button>
-        </>
-      )}
     </div>
   );
 }
