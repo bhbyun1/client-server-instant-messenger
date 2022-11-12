@@ -38,7 +38,7 @@ export default function WebSocketCall({ socket }) {
   return (
     <div>
       <h2>WebSocket Communication</h2>
-      <ConversationPanel />
+      <ConversationPanel setMessages={setMessages} />
       <div className={styles.conversation_container}>
         <div className={styles.conversation}>
           <div className={styles.message_list}>
