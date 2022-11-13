@@ -15,10 +15,9 @@ jobs:
       with:
         python-version: ${{ matrix.python-version }}
     - name: Python flake8 Lint
-      uses: py-actions/flake8@v2.2.1
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install
-        pip install pylint pylint-flask pylint-flask-sqlalchemy
+      uses: py-actions/flake8@v2.2.1 
+      with:
+        exclude: ".git,__pycache__,alembic,app.py" 
+        args: "--per-file-ignores=app.py:F403,F401"
+        max-line-length: "100"
         
