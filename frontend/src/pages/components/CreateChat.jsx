@@ -10,8 +10,7 @@ import Button from "@mui/material/Button";
 import Chip from "@mui/material/Chip";
 
 //a
-
-function createChat(props) {
+function CreateChat(props) {
     // const [visible, setVisible] = useState(false);
 
     // const handleClose = () => {
@@ -24,6 +23,28 @@ function createChat(props) {
     const dummyUsers = ["adam", "brandon", "caleb", "donovan", "ethan", "francis"];
 
     
+    useEffect(() => {
+        const headers = new Headers();
+        headers.set('Content-Type', 'application/json');
+        headers.set('x-access-token', sessionStorage.getItem('token'));
+        fetch('http://localhost:5000/user', {
+            headers: headers,
+            method: 'GET'
+        }).then((response) => {
+            if (response.ok) 
+                return response.json();
+            else 
+                throw response
+            }
+        ).then((response) => {
+            if (response.users) {
+                setUsers(response.users);
+                return response.users;
+            }
+        }).catch((err) => {
+            console.error(`error from ${err}`);
+        })
+    }, []);
 
     const handleAutocomplete = (event, value) => {
         setUsers(value);
@@ -55,7 +76,7 @@ function createChat(props) {
             <DialogContent>
                 <Autocomplete
                     multiple
-                    options={dummyUsers}
+                    options={users || dummyUsers}
                     sx={{ width: 300 }}
                     onChange={handleAutocomplete}
                     renderInput={(params) => <TextField {...params} variant="filled" label="Users"/>}
@@ -69,7 +90,7 @@ function createChat(props) {
     );
 };
 
-export default createChat;
+export default CreateChat;
 
 // s
 

@@ -1,5 +1,5 @@
 import { Box, ButtonGroup, Button, Typography, Autocomplete, TextField } from "@mui/material";
-import React from "react";
+import React, {useEffect,useMemo} from "react";
 import styles from '../../styles.module.css';
 import createMuiTheme from "@mui/material/styles";
 import { useState } from 'react'
@@ -11,6 +11,30 @@ function ConversationPanel({setMessages}) {
                       "Claire": [{'username': 'Claire', 'message': 'I\'m Claire'}]};
     // Endpoint for <id> chat
     // Endpoint for all chat name
+    
+    
+    useEffect(() => {
+        const headers = new Headers()
+        headers.set('Content-Type', 'application/json');
+        headers.set('x-access-token', sessionStorage.getItem('token'));
+        fetch('http://localhost:5000/user', {
+            headers: headers,
+            method: 'GET'
+        }).then((response) => {
+            if (response.ok) 
+                return response.json();
+            else 
+                throw response
+            }
+        ).then((response) => {
+            if (response.users) {
+                setUsers(response.users);
+                return response.users;
+            } else {
+                console.error(`NO USERS OR SOMETHING IDK`);
+            }
+        });
+    }, [])
 
     const handleAutocomplete = (event, value) => {
         // setUsers(value);

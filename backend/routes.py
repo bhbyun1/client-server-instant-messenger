@@ -87,8 +87,8 @@ def get_users(user):
     print(f"access by {user}")
     users = db.session.execute(db.select(User).order_by(User.id)).scalars()
     return jsonify({
-        "users": user.username for user in users
-    })
+        "users": [user.username for user in users]
+    }), 200
 
 
 @app.route('/user', methods=['POST'])

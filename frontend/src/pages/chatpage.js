@@ -10,22 +10,22 @@ function Chatpage() {
   const [socketInstance, setSocketInstance] = useState("");
   const [loading, setLoading] = useState(true);
   const [showChat, setShowChat] = useState(true);
-  const [showCreateChat, setShowCreateChat] = useState(0);
+  const [showCreateChat, setShowCreateChat] = useState(false);
   const [selectedValue, setSelectedValue] = useState([]);
 
-  const showChatClick = () => {
-    if (!showChat) {
-      setShowChat(true);
-    } else {
-      setShowChat(false);
-    }
-  };
+  // const showChatClick = () => {
+  //   if (!showChat) {
+  //     setShowChat(true);
+  //   } else {
+  //     setShowChat(false);
+  //   }
+  // };
 
-  const hideCreateChatClick =(value) => {
-    setShowCreateChat(false);
-    setSelectedValue(value);
-    console.log(value);
-  }
+  // const hideCreateChatClick =(value) => {
+  //   setShowCreateChat(false);
+  //   setSelectedValue(value);
+  //   console.log(value);
+  // }
 
   const showCreateChatClick = () => {
     if (!showCreateChat) {
