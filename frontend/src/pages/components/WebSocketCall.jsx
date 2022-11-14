@@ -20,7 +20,7 @@ export default function WebSocketCall({ socket }) {
     if (!message) {
       return;
     }
-    socket.emit("data", {'username': sessionStorage.Username + ": ", 'message': message});
+    socket.emit("data", {'token': sessionStorage.token, 'content': message, 'public_id': sessionStorage.currentChat});
     setMessage("");
   };
 
@@ -38,7 +38,7 @@ export default function WebSocketCall({ socket }) {
   return (
     <div>
       <h2>WebSocket Communication</h2>
-      <ConversationPanel />
+      <ConversationPanel setConversationMessages={setMessages} />
       <div className={styles.conversation_container}>
         <div className={styles.conversation}>
           <div className={styles.message_list}>

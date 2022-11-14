@@ -206,8 +206,10 @@ def get_chat_history(user, chat_id):
         return not_found
     # if not user in chatroom.users:
     #     return error_response
-    print(str(chatroom))
-    return jsonify(), 204
+    #print(str(chatroom))
+    #print(chatroom.messages)
+    #print({'messages': [m.as_dict() for m in chatroom.messages]})
+    return jsonify({'messages': [m.as_dict() for m in chatroom.messages]}), 200
 
 
 @app.route('/chat', methods=['GET'])
