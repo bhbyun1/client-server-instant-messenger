@@ -19,6 +19,8 @@ function CreateChat(props) {
     const {onClose, selectedValue, open} = props;
     // const {open} = props;
     const [users, setUsers] = useState([]);
+    const [chatName, setChatName] = useState("");
+    const [chatMembers, setChatMembers] = useState([]);
 
     const dummyUsers = ["adam", "brandon", "caleb", "donovan", "ethan", "francis"];
 
@@ -47,13 +49,38 @@ function CreateChat(props) {
     }, []);
 
     const handleAutocomplete = (event, value) => {
-        setUsers(value);
+        //setChatMembers(oldChatMembersList => [...oldChatMembersList, value])
+        setChatMembers(value);
         console.log(value);
+    }
+
+    const handleSubmit = (value) => {
+        const headers = new Headers();
+        headers.set('Content-Type', 'application/json');
+        headers.set('x-access-token', sessionStorage.getItem('token'));
+        chatMembers = [sessionStorage.getItem("Username"), ...chatMembers]
+        fetch('http://localhost:5000/chat', {
+            headers: headers,
+            method: 'POST',
+            body: JSON.stringify({'name': chatName, 'users': chatMembers})
+        }).then(response => {
+            if (response.ok) {
+                onClose(value);
+                return response.json();
+            }
+            else
+                throw response;
+        });
     }
 
     const handleClose = (value) => {
         console.log(value);
         onClose(value);
+    }
+
+    const handleChatName = (event) => {
+        setChatName(event.target.value);
+        // console.log("set chat name to "+ event.target.value);
     }
     // a
 
@@ -73,10 +100,19 @@ function CreateChat(props) {
                     variant="standard"
                 />
             </DialogContent> */}
+            <br></br>
             <DialogContent>
+                <TextField
+                    label='Chat Name'
+                    onChange={handleChatName}
+                    required
+                    sx={{width: 300}}
+                />
+                <br></br>
+                <br></br>
                 <Autocomplete
                     multiple
-                    options={users || dummyUsers}
+                    options={users}
                     sx={{ width: 300 }}
                     onChange={handleAutocomplete}
                     renderInput={(params) => <TextField {...params} variant="filled" label="Users"/>}
@@ -84,7 +120,7 @@ function CreateChat(props) {
             </DialogContent>
             <DialogActions>
                 <Button onClick={handleClose}>Cancel</Button>
-                <Button onClick={handleClose}>Submit</Button>
+                <Button onClick={handleSubmit}>Submit</Button>
             </DialogActions>
         </Dialog>
     );
