@@ -218,11 +218,8 @@ def get_chatrooms(user):
     chats = db.session.execute(
         db.select(Chatroom).order_by(Chatroom.id)).scalars()
     chats = list(chats)
-    print(chats)
-    d = [{"public_id": str(c.public_id),
-          "name": c.name,
-          "owner": c.owner.username,
-          "users": [u.username for u in c.users]} for c in chats]
+    #print(chats)
+    d = [c.as_dict() for c in chats]
     return jsonify({"chatrooms": d}), 200
 
 

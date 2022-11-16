@@ -28,7 +28,6 @@ def handle_data(data):
     """listener for data events"""
     print("data from the front end: ", data)
     emit("data", {'data': data, 'id': request.sid}, broadcast=True)
-    handle_join(data)
 
 
 @socketio.on('join')

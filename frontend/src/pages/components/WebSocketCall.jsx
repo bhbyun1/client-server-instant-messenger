@@ -20,12 +20,14 @@ export default function WebSocketCall({ socket }) {
     if (!message) {
       return;
     }
-    socket.emit("data", {'token': sessionStorage.token, 'content': message, 'public_id': sessionStorage.currentChat});
+    socket.emit("data", {'token': sessionStorage.token, 'username': sessionStorage.Username, 'message': message, 'public_id': sessionStorage.currentChat});
     setMessage("");
   };
 
   useEffect(() => {
     socket.on("data", (data) => {
+      console.log("received data on socket");
+      console.log(data);
       setMessages([...messages, data.data]);
     });
     return () => {

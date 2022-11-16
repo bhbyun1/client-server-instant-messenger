@@ -90,7 +90,7 @@ function ConversationPanel({setConversationMessages}) {
             console.log("response text:");
             console.log(response);
             if (response) {
-                setMessages(response['messages']) // probably need to edit this, i dont know the shape of the data
+                setConversationMessages(response['messages']); // probably need to edit this, i dont know the shape of the data
                 return response;
             } else {
                 console.log("error fetching message history");
@@ -112,7 +112,7 @@ function ConversationPanel({setConversationMessages}) {
                     options={chats}
                     sx={{ width: 300 }}
                     onChange={handleAutocomplete}
-                    renderInput={(params) => <TextField {...params} variant="filled" label="Users"/>}
+                    renderInput={(params) => <TextField {...params} variant="filled" label="Chats"/>}
                 />
             {/* <ButtonGroup
             orientation="vertical"
