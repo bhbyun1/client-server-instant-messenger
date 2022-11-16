@@ -20,19 +20,26 @@ export default function WebSocketCall({ socket }) {
     if (!message) {
       return;
     }
-    socket.emit("data", {'token': sessionStorage.token, 'username': sessionStorage.Username, 'message': message, 'public_id': sessionStorage.currentChat});
+    socket.emit("message", {'token': sessionStorage.token, 'content': message, 'public_id': sessionStorage.currentChat});
     setMessage("");
   };
 
+  socket.emit("join", {'token': sessionStorage.token})
   useEffect(() => {
-    socket.on("data", (data) => {
+      socket.on("join", (data) => {
+          console.log("received join response from socket");
+          console.log(data);
+      });
+  });
+  useEffect(() => {
+    socket.on("message", (data) => {
       console.log("received data on socket");
       console.log(data);
-      setMessages([...messages, data.data]);
+      setMessages([...messages, data]);
     });
     return () => {
-      socket.off("data", () => {
-        console.log("data event was removed");
+      socket.off("message", () => {
+        console.log("message event was removed");
       });
     };
   }, [socket, messages]);
