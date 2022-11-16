@@ -213,7 +213,6 @@ def get_chatrooms(user):
     chats = db.session.execute(
         db.select(Chatroom).order_by(Chatroom.id)).scalars()
     chats = list(chats)
-    #print(chats)
     d = [c.as_dict() for c in chats]
     return jsonify({"chatrooms": d}), 200
 
