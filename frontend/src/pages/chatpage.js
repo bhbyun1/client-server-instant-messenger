@@ -71,8 +71,7 @@ function Chatpage() {
             href='/login'
             color='error'
             onClick={() => {
-              sessionStorage.removeItem('Username');
-              sessionStorage.removeItem('token');
+              sessionStorage.clear();
             }}
           >
           Logout
