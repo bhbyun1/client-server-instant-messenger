@@ -204,11 +204,6 @@ def get_chat_history(user, chat_id):
     ).scalars().one_or_none()
     if not chatroom:
         return not_found
-    # if not user in chatroom.users:
-    #     return error_response
-    #print(str(chatroom))
-    #print(chatroom.messages)
-    #print({'messages': [m.as_dict() for m in chatroom.messages]})
     return jsonify({'messages': [m.as_dict() for m in chatroom.messages]}), 200
 
 
