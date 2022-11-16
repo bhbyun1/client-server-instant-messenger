@@ -20,17 +20,26 @@ export default function WebSocketCall({ socket }) {
     if (!message) {
       return;
     }
-    socket.emit("data", {'username': sessionStorage.Username + ": ", 'message': message});
+    socket.emit("message", {'token': sessionStorage.token, 'content': message, 'public_id': sessionStorage.currentChat});
     setMessage("");
   };
 
+  socket.emit("join", {'token': sessionStorage.token})
   useEffect(() => {
-    socket.on("data", (data) => {
-      setMessages([...messages, data.data]);
+      socket.on("join", (data) => {
+          console.log("received join response from socket");
+          console.log(data);
+      });
+  });
+  useEffect(() => {
+    socket.on("message", (data) => {
+      console.log("received data on socket");
+      console.log(data);
+      setMessages([...messages, data]);
     });
     return () => {
-      socket.off("data", () => {
-        console.log("data event was removed");
+      socket.off("message", () => {
+        console.log("message event was removed");
       });
     };
   }, [socket, messages]);
@@ -38,7 +47,7 @@ export default function WebSocketCall({ socket }) {
   return (
     <div>
       <h2>WebSocket Communication</h2>
-      <ConversationPanel />
+      <ConversationPanel setConversationMessages={setMessages} />
       <div className={styles.conversation_container}>
         <div className={styles.conversation}>
           <div className={styles.message_list}>

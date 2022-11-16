@@ -97,8 +97,8 @@ class Chatroom(Base):
         return {
             'name': self.name,
             'owner': self.owner.as_dict(),
-            'users': [user.as_dict() for user in self.users],
-            'public_ID': str(self.public_id),
+            'users': [user.username for user in self.users],
+            'public_id': str(self.public_id),
             'messages': [m.as_dict() for m in self.messages]
         }
 
@@ -127,9 +127,9 @@ class Message(Base):
         return {
             'id': self.id,
             'sent': self.sent.isoformat(),
-            'owner': self.from_user.username,
+            'username': self.from_user.username,
             'chatroom': str(self.chatroom.public_id),
-            'content': self.content
+            'message': self.content
         }
 
 

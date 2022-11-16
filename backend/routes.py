@@ -204,10 +204,7 @@ def get_chat_history(user, chat_id):
     ).scalars().one_or_none()
     if not chatroom:
         return not_found
-    # if not user in chatroom.users:
-    #     return error_response
-    print(str(chatroom))
-    return jsonify(), 204
+    return jsonify({'messages': [m.as_dict() for m in chatroom.messages]}), 200
 
 
 @app.route('/chat', methods=['GET'])
@@ -216,11 +213,7 @@ def get_chatrooms(user):
     chats = db.session.execute(
         db.select(Chatroom).order_by(Chatroom.id)).scalars()
     chats = list(chats)
-    print(chats)
-    d = [{"public_id": str(c.public_id),
-          "name": c.name,
-          "owner": c.owner.username,
-          "users": [u.username for u in c.users]} for c in chats]
+    d = [c.as_dict() for c in chats]
     return jsonify({"chatrooms": d}), 200
 
 
