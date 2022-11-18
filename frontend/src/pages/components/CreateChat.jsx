@@ -40,8 +40,10 @@ function CreateChat(props) {
             }
         ).then((response) => {
             if (response.users) {
-                setUsers(response.users);
-                return response.users;
+                let otherUsers = response.users.filter(uname => uname != sessionStorage.Username);
+                console.log(otherUsers);
+                setUsers(otherUsers);
+                return otherUsers;
             }
         }).catch((err) => {
             console.error(`error from ${err}`);
