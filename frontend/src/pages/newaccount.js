@@ -4,19 +4,42 @@ import { Button, Alert, AlertTitle, AppBar, Toolbar, Typography, TextField, Icon
 import useRouter from 'next/router';
 
 const Register = () => {
+  const MAX_USERNAME_LENGTH = 30;
+  const MAX_PASSWORD_LENGTH = 50;
   const router = useRouter;
   // conditionally display error if login credentials were invalid
   const [showError, setShowError] = React.useState(false);
+  const [isUsernameValid, setIsUsernameValid] = React.useState(true);
+  const [isPasswordValid, setIsPasswordValid] = React.useState(true);
+
+  // true if username is valid, false if not
+  const checkUsername = (text) => {
+    return !!text && !/[^a-zA-Z0-9]/.test(text) && text.length <= MAX_USERNAME_LENGTH;
+  }
+
+  const checkPassword = (text) => {
+    return !!text && text.length <= MAX_PASSWORD_LENGTH;
+  }
+
   let user = {username: '', password: ''}
-  const handleInputChange = (event) => {
-    const {value, name} = event.target;
-    user[name] = value;
+  const handleUsernameChange = (event) => {
+    user.username = event.target.value;
+    setIsUsernameValid(checkUsername(user.username));
+  };
+
+  const handlePasswordChange = (event) => {
+    user.password = event.target.value;
+    setIsPasswordValid(checkPassword(user.password));
   };
 
   const onSubmit = (event) => {
     event.preventDefault();
     const username = user.username;
     const password = user.password;
+
+    if (!isUsernameValid || !isPasswordValid) {
+      return;
+    }
     // checks with db that user exists
     fetch('http://localhost:5000/user', {
       headers: {
@@ -61,21 +84,25 @@ const Register = () => {
         <div className={styles.login_box}>
         <Box sx={{my: '10%', display: 'flex', justifyContent: 'center', flexDirection: 'column'}}>
           <TextField
+            error={!isUsernameValid}
             id='outlined-search'
             title='username'
             label='username'
             name='username'
-            onChange={handleInputChange}
+            onChange={handleUsernameChange}
+            helperText={isUsernameValid ? "" : "Invalid username."}
             required
             sx={{my: '2%', width: '300px'}}
           />
           <TextField
+            error={!isPasswordValid}
             id='outlined-search'
             title='password'
             label='password'
             name='password'
             type='password'
-            onChange={handleInputChange}
+            onChange={handlePasswordChange}
+            helperText={isPasswordValid ? "" : "Invalid password."}
             required
             sx={{my: '3%', width: '300px'}}
           />
