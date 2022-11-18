@@ -17,11 +17,11 @@ export class Message extends React.Component {
     }
     render() {
         return (
-        <div ref={this.messageRef} className={styles.message}>
-          <div className={styles.username}>
+        <div ref={this.messageRef}>
+          <div className={styles.conversation_username}>
             {this.props.message['data']['username']}
           </div>
-          <div>
+          <div className={styles.conversation_message}>
             {this.props.message['data']['message']}
           </div>
           <br/>
