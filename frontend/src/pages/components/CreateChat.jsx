@@ -16,13 +16,17 @@ function CreateChat(props) {
     // const handleClose = () => {
     //     visible ? setVisible(false) : setVisible(true);
     // }
+    const MAX_CHATNAME_LENGTH = 512;
     const {onClose, selectedValue, open} = props;
     // const {open} = props;
     const [users, setUsers] = useState([]);
     const [chatName, setChatName] = useState("");
     const [chatMembers, setChatMembers] = useState([]);
-
-    const dummyUsers = ["adam", "brandon", "caleb", "donovan", "ethan", "francis"];
+    const [isChatNameValid, setIsChatNameValid] = useState(true);
+    const checkChatName = (text) => {
+        return !!text && !/[^a-zA-Z0-9 ():;@#$+,.-]/.test(text) && text.length <= MAX_CHATNAME_LENGTH;
+    }
+    // const dummyUsers = ["adam", "brandon", "caleb", "donovan", "ethan", "francis"];
 
     
     useEffect(() => {
@@ -55,6 +59,9 @@ function CreateChat(props) {
     }
 
     const handleSubmit = (value) => {
+        if (!isChatNameValid) {
+            return;
+        }
         const headers = new Headers();
         headers.set('Content-Type', 'application/json');
         headers.set('x-access-token', sessionStorage.getItem('token'));
@@ -79,7 +86,10 @@ function CreateChat(props) {
     }
 
     const handleChatName = (event) => {
-        setChatName(event.target.value);
+        setIsChatNameValid(checkChatName(event.target.value));
+        if (isChatNameValid) {
+            setChatName(event.target.value);
+        }
         // console.log("set chat name to "+ event.target.value);
     }
     // a
@@ -104,7 +114,9 @@ function CreateChat(props) {
             <DialogContent>
                 <TextField
                     label='Chat Name'
+                    error={!isChatNameValid}
                     onChange={handleChatName}
+                    helperText={isChatNameValid ? "" : "Invalid chat name."}
                     required
                     sx={{width: 300}}
                 />
