@@ -35,7 +35,6 @@ const Login = () => {
     fetch(configData.HOSTNAME + ":5000/login", {
       headers: headers,
       method: 'POST',
-      body: JSON.stringify({ 'username': username, 'password': password })
     }).then((response) => response.json())
     .then((response) => {
       if (response.token) {
