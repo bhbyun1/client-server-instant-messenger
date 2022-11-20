@@ -10,53 +10,6 @@ function ConversationPanel({setConversationMessages}) {
     //                   "     ": [{'username': 'Bob', 'message': 'I\'m Bob'}],
     //                   "Claire": [{'username': 'Claire', 'message': 'I\'m Claire'}]};
     const [messages, setMessages] = React.useState([]);
-    // Endpoint for <id> chat
-    // Endpoint for all chat name
-    
-    
-    useEffect(() => {
-        //let chatroomList = []
-        let headers = new Headers();
-        //headers.set('Content-Type', 'application/json');
-        //headers.set('Accept', 'application/json');
-        headers.set('x-access-token', sessionStorage.token);
-        
-        fetch('http://localhost:5000/chat', {
-        headers: headers,
-        method: 'GET',
-        }).then((response) => response.json())
-        .then((response) => {
-            if (response) {
-                let chatroomList = response["chatrooms"];
-
-                let displayChatroom = []
-                //console.log("chatroomList:");
-                //console.log(chatroomList);
-                for (let i = 0; i < chatroomList.length; i++) {
-                    let chatroom = chatroomList[i];
-                    //console.log(chatroom)
-                    if (chatroom["users"].includes(sessionStorage.Username)) {
-                        displayChatroom.push({"label": chatroom["name"], "id": chatroom["public_id"]});
-                    }
-                }
-                //console.log("chats:");
-                //console.log(chats);
-                if (JSON.stringify(chats) != JSON.stringify(displayChatroom)) {
-                    setChats(displayChatroom);
-                    //console.log("chats:");
-                    //console.log(chats);
-                }
-
-
-                return response["chatrooms"];
-            } else {
-                console.log("couldn't fetch chatrooms");
-            }
-        });
-        //let chatroomList = response['chatrooms'];
-
-        //let chatroomList = accurateMockData["chatrooms"];
-    });
 
     const handleAutocomplete = (event, value) => {
         // setUsers(value);
@@ -95,6 +48,52 @@ function ConversationPanel({setConversationMessages}) {
             }
         });
     }
+    
+    useEffect(() => {
+        //let chatroomList = []
+        let headers = new Headers();
+        //headers.set('Content-Type', 'application/json');
+        //headers.set('Accept', 'application/json');
+        headers.set('x-access-token', sessionStorage.token);
+        
+        fetch('http://localhost:5000/chat', {
+        headers: headers,
+        method: 'GET',
+        }).then((response) => response.json())
+        .then((response) => {
+            if (response) {
+                let chatroomList = response["chatrooms"];
+
+                let displayChatroom = []
+                //console.log("chatroomList:");
+                //console.log(chatroomList);
+                for (let i = 0; i < chatroomList.length; i++) {
+                    let chatroom = chatroomList[i];
+                    //console.log(chatroom)
+                    if (chatroom["users"].includes(sessionStorage.Username)) {
+                        displayChatroom.push({"label": chatroom["name"], "id": chatroom["public_id"]});
+                    }
+                }
+                //console.log("chats:");
+                //console.log(chats);
+                if (JSON.stringify(chats) != JSON.stringify(displayChatroom)) {
+                    setChats(displayChatroom);
+                    //console.log("chats:");
+                    //console.log(chats);
+                }
+                if (!sessionStorage.currentChat) {
+                    handleAutocomplete(null, displayChatroom[0]);
+                }
+
+                return response["chatrooms"];
+            } else {
+                console.log("couldn't fetch chatrooms");
+            }
+        });
+        //let chatroomList = response['chatrooms'];
+
+        //let chatroomList = accurateMockData["chatrooms"];
+    });
 
     return(
         <Box sx={{
