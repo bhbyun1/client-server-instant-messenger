@@ -9,7 +9,6 @@ function ConversationPanel({setConversationMessages}) {
     // const mockData = {"Adam": [{'username': 'Adam', 'message': 'I\'m Adam'}],
     //                   "     ": [{'username': 'Bob', 'message': 'I\'m Bob'}],
     //                   "Claire": [{'username': 'Claire', 'message': 'I\'m Claire'}]};
-    const [currentChat, setCurrentChat] = React.useState("");
     const [messages, setMessages] = React.useState([]);
     // Endpoint for <id> chat
     // Endpoint for all chat name
@@ -63,7 +62,6 @@ function ConversationPanel({setConversationMessages}) {
         // setUsers(value);
         // fetch endpoint for <id> chat history
         //setMessages(mockData[value]);
-        setCurrentChat(value);
         sessionStorage.currentChat = value['id'];
         console.log("handling autocomplete");
         
