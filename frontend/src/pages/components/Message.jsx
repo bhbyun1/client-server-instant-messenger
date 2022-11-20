@@ -18,10 +18,10 @@ export class Message extends React.Component {
     render() {
         return (
         <div ref={this.messageRef}>
-          <div className={styles.conversation_username}>
+          <div className={this.props.message['data']['username'] == sessionStorage.Username ? styles.conversation_your_username : styles.conversation_username}>
             {this.props.message['data']['username']}
           </div>
-          <div className={styles.conversation_message}>
+          <div className={this.props.message['data']['username'] == sessionStorage.Username ? styles.conversation_your_message : styles.conversation_message}>
             {this.props.message['data']['message']}
           </div>
           <br/>

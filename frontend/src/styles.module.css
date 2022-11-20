@@ -143,9 +143,35 @@
     overflow-wrap: anywhere;
   }
 
+  .conversation_your_message {
+    position: relative;
+    bottom: 0;
+    display: inline-block;
+    width: auto;
+    background-color: #0a58ff;
+    color: rgb(255, 255, 255);
+    padding: 0.7rem 1.1rem;
+    line-height: 1.25rem;
+    border-radius: 1.4rem;
+    font-weight: 400;
+    font-size: 1.25rem;
+    font-family: Arial, Helvetica, sans-serif;
+    word-break: normal;
+    overflow-wrap: anywhere;
+  }
+
   .conversation_username {
     padding: 0.3rem;
     color: #575757;
+    font-weight: 400;
+    font-size: 1.25rem;
+    font-family: Arial, Helvetica, sans-serif;
+    /*font-weight: bold;*/
+  }
+
+  .conversation_your_username {
+    padding: 0.3rem;
+    color: #001aff;
     font-weight: 400;
     font-size: 1.25rem;
     font-family: Arial, Helvetica, sans-serif;
