@@ -11,9 +11,44 @@ function ConversationPanel({setConversationMessages}) {
     //                   "     ": [{'username': 'Bob', 'message': 'I\'m Bob'}],
     //                   "Claire": [{'username': 'Claire', 'message': 'I\'m Claire'}]};
     const [messages, setMessages] = React.useState([]);
-    // Endpoint for <id> chat
-    // Endpoint for all chat name
-    
+
+    const handleAutocomplete = (event, value) => {
+        // setUsers(value);
+        // fetch endpoint for <id> chat history
+        //setMessages(mockData[value]);
+        sessionStorage.currentChat = value['id'];
+        console.log("handling autocomplete");
+        
+        //console.log(event);
+        console.log(value);
+        console.log("value");
+
+        // call fetch chatid history api here instead of the above setmessages, using value["id"]
+
+        let headers = new Headers();
+        headers.set('Content-Type', 'application/json');
+        headers.set('Accept', 'application/json');
+        headers.set('x-access-token', sessionStorage.token);
+        
+        fetch(configData.HOSTNAME + ':5000/chat/' + value["id"], {
+        headers: headers,
+        method: 'GET',
+        }).then((response) => 
+        {
+            //console.log(response.text());
+            return response.json();
+        })
+        .then((response) => {
+            console.log("response text:");
+            console.log(response);
+            if (response) {
+                setConversationMessages(response['messages']); // probably need to edit this, i dont know the shape of the data
+                return response;
+            } else {
+                console.log("error fetching message history");
+            }
+        });
+    }
     
     useEffect(() => {
         //let chatroomList = []
@@ -47,7 +82,9 @@ function ConversationPanel({setConversationMessages}) {
                     //console.log("chats:");
                     //console.log(chats);
                 }
-
+                if (!sessionStorage.currentChat) {
+                    handleAutocomplete(null, displayChatroom[0]);
+                }
 
                 return response["chatrooms"];
             } else {
@@ -58,44 +95,6 @@ function ConversationPanel({setConversationMessages}) {
 
         //let chatroomList = accurateMockData["chatrooms"];
     });
-
-    const handleAutocomplete = (event, value) => {
-        // setUsers(value);
-        // fetch endpoint for <id> chat history
-        //setMessages(mockData[value]);
-        sessionStorage.currentChat = value['id'];
-        console.log("handling autocomplete");
-        
-        //console.log(event);
-        console.log(value);
-        console.log("value");
-
-        // call fetch chatid history api here instead of the above setmessages, using value["id"]
-
-        let headers = new Headers();
-        headers.set('Content-Type', 'application/json');
-        headers.set('Accept', 'application/json');
-        headers.set('x-access-token', sessionStorage.token);
-        
-        fetch(configData.HOSTNAME + ":5000/chat/" + value["id"], {
-        headers: headers,
-        method: 'GET',
-        }).then((response) => 
-        {
-            //console.log(response.text());
-            return response.json();
-        })
-        .then((response) => {
-            console.log("response text:");
-            console.log(response);
-            if (response) {
-                setConversationMessages(response['messages']); // probably need to edit this, i dont know the shape of the data
-                return response;
-            } else {
-                console.log("error fetching message history");
-            }
-        });
-    }
 
     return(
         <Box sx={{
