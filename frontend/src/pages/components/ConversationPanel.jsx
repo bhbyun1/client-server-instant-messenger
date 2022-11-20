@@ -21,7 +21,7 @@ function ConversationPanel({setConversationMessages}) {
         //headers.set('Accept', 'application/json');
         headers.set('x-access-token', sessionStorage.token);
         
-        fetch('http://localhost:5000/chat', {
+        fetch('http://127.0.0.1:5000/chat', {
         headers: headers,
         method: 'GET',
         }).then((response) => response.json())
@@ -76,7 +76,7 @@ function ConversationPanel({setConversationMessages}) {
         headers.set('Accept', 'application/json');
         headers.set('x-access-token', sessionStorage.token);
         
-        fetch('http://localhost:5000/chat/' + value["id"], {
+        fetch('http://127.0.0.1:5000/chat/' + value["id"], {
         headers: headers,
         method: 'GET',
         }).then((response) => 
@@ -103,12 +103,9 @@ function ConversationPanel({setConversationMessages}) {
             '& > *': { 
                 m: 1,}, 
         }}>
-            <Typography>
-                Select a Chat
-            </Typography>
             <Autocomplete
                     options={chats}
-                    sx={{ width: 300 }}
+                    fullWidth
                     onChange={handleAutocomplete}
                     renderInput={(params) => <TextField {...params} variant="filled" label="Chats"/>}
                 />

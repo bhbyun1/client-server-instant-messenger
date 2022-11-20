@@ -6,10 +6,28 @@ import TextField from '@mui/material/TextField';
 import InputAdornment from '@mui/material/InputAdornment';
 import SendIcon from '@mui/icons-material/Send';
 import styles from '../../styles.module.css';
+import CreateChat from "./CreateChat";
+import { io } from "socket.io-client";
+import { Button, Typography } from "@mui/material";
 
 export default function WebSocketCall({ socket }) {
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([{'username': '', 'message': ''}]);
+  const [socketInstance, setSocketInstance] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [showChat, setShowChat] = useState(true);
+  const [showCreateChat, setShowCreateChat] = useState(false);
+  const [selectedValue, setSelectedValue] = useState([]);
+
+  const showCreateChatClick = () => {
+    if (!showCreateChat) {
+      setShowCreateChat(true);
+    } else {
+      setShowCreateChat(false);
+    }
+    console.log("now isssa " + showCreateChat);
+    // setShowCreateChat(true);
+  }
 
   const handleText = (e) => {
     const inputMessage = e.target.value;
@@ -32,6 +50,25 @@ export default function WebSocketCall({ socket }) {
       });
   });
   useEffect(() => {
+
+    if (showChat) {
+      const socket = io("127.0.0.1:5000/", {
+        transports: ["websocket"],
+        cors: {
+          origin: "http://127.0.0.1:3000/",
+        },
+      });
+
+      setSocketInstance(socket);
+      setLoading(false);
+
+      return function disconnect() {
+        socket.disconnect();
+      };
+    }
+
+  }, [showChat])
+  useEffect(() => {
     socket.on("message", (data) => {
       console.log("received data on socket");
       console.log(data);
@@ -44,10 +81,19 @@ export default function WebSocketCall({ socket }) {
     };
   }, [socket, messages]);
 
+
   return (
     <div>
-      <h2>WebSocket Communication</h2>
-      <ConversationPanel setConversationMessages={setMessages} />
+      <div className={styles.chats_wrapper}>
+        {/* <Typography variant="h5" className={styles.chats_header}>Select a Chat</Typography> */}
+          <CreateChat
+            selectedValue={selectedValue}
+            open={showCreateChat}
+            onClose={showCreateChatClick}
+          />
+          <Button sx={{ marginLeft: 1 }} variant="contained" onClick={showCreateChatClick}>Create Chat</Button>
+        <ConversationPanel className={styles.conversation_panel} setConversationMessages={setMessages} />
+      </div>
       <div className={styles.conversation_container}>
         <div className={styles.conversation}>
           <div className={styles.message_list}>

@@ -59,7 +59,6 @@ function Chatpage() {
     <div className="App">
       <AppBar sx={{position: 'sticky'}}>
         <Toolbar>
-          <Typography variant='h6'>Chat</Typography>
           <IconButton
             sx={{marginLeft: 'auto'}}
             aria-label='close'>
@@ -86,12 +85,12 @@ function Chatpage() {
             {!loading && <WebSocketCall socket={socketInstance} />}
           </div>
           {/* {showCreateChat && <CreateChat setShowCreateChat={setShowCreateChat}/>} */}
-          <CreateChat
+          {/* <CreateChat
             selectedValue={selectedValue}
             open={showCreateChat}
             onClose={showCreateChatClick}
           />
-          <button onClick={showCreateChatClick}>Create Chat</button>
+          <button onClick={showCreateChatClick}>Create Chat</button> */}
     </div>
   );
 }
