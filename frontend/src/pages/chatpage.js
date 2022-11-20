@@ -5,6 +5,7 @@ import { io } from "socket.io-client";
 import React, { useEffect, useState } from "react";
 import CreateChat from "./components/CreateChat";
 import { Button, AppBar, Toolbar, Typography, IconButton } from '@mui/material';
+import configData from "../config.json";
 
 function Chatpage() {
   const [socketInstance, setSocketInstance] = useState("");
@@ -39,10 +40,10 @@ function Chatpage() {
 
   useEffect(() => {
     if (showChat) {
-      const socket = io("127.0.0.1:5000/", {
+      const socket = io(configData.HOSTNAME + ":5000/", {
         transports: ["websocket"],
         cors: {
-          origin: "http://127.0.0.1:3000/",
+          origin: configData.HOSTNAME + ":3000/",
         },
       });
 

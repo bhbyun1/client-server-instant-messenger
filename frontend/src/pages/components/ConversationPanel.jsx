@@ -2,7 +2,8 @@ import { Box, ButtonGroup, Button, Typography, Autocomplete, TextField } from "@
 import React, {useEffect,useMemo} from "react";
 import styles from '../../styles.module.css';
 import createMuiTheme from "@mui/material/styles";
-import { useState } from 'react'
+import { useState } from 'react';
+import configData from "../../config.json";
 
 function ConversationPanel({setConversationMessages}) {
     const [chats, setChats] = React.useState([]);
@@ -21,7 +22,7 @@ function ConversationPanel({setConversationMessages}) {
         //headers.set('Accept', 'application/json');
         headers.set('x-access-token', sessionStorage.token);
         
-        fetch('http://127.0.0.1:5000/chat', {
+        fetch(configData.HOSTNAME + ":5000/chat", {
         headers: headers,
         method: 'GET',
         }).then((response) => response.json())
@@ -76,7 +77,7 @@ function ConversationPanel({setConversationMessages}) {
         headers.set('Accept', 'application/json');
         headers.set('x-access-token', sessionStorage.token);
         
-        fetch('http://127.0.0.1:5000/chat/' + value["id"], {
+        fetch(configData.HOSTNAME + ":5000/chat/" + value["id"], {
         headers: headers,
         method: 'GET',
         }).then((response) => 

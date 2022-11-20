@@ -9,6 +9,7 @@ import styles from '../../styles.module.css';
 import CreateChat from "./CreateChat";
 import { io } from "socket.io-client";
 import { Button, Typography } from "@mui/material";
+import configData from "../../config.json";
 
 export default function WebSocketCall({ socket }) {
   const [message, setMessage] = useState("");
@@ -52,10 +53,10 @@ export default function WebSocketCall({ socket }) {
   useEffect(() => {
 
     if (showChat) {
-      const socket = io("127.0.0.1:5000/", {
+      const socket = io(configData.HOSTNAME + ":5000/", {
         transports: ["websocket"],
         cors: {
-          origin: "http://127.0.0.1:3000/",
+          origin: configData.HOSTNAME + ":3000/",
         },
       });
 

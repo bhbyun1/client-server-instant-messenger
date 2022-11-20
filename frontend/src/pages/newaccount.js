@@ -2,6 +2,7 @@ import React, {useContext} from "react";
 import styles from '../styles.module.css'
 import { Button, Alert, AlertTitle, AppBar, Toolbar, Typography, TextField, IconButton, Box } from '@mui/material';
 import useRouter from 'next/router';
+import configData from "../config.json";
 
 const Register = () => {
   const MAX_USERNAME_LENGTH = 30;
@@ -41,7 +42,7 @@ const Register = () => {
       return;
     }
     // checks with db that user exists
-    fetch('http://localhost:5000/user', {
+    fetch(configData.HOSTNAME + ":5000/user", {
       headers: {
         'Content-Type': 'application/json'
       },
@@ -50,7 +51,7 @@ const Register = () => {
     }).then((response) => response.json())
     .then((response) => {
       if (response.message == 'Registration successful') {
-        router.push('http://localhost:3000/login');
+        router.push(configData.HOSTNAME + ":3000/login");
         return response;
       } else {
         setShowError(true);
