@@ -51,7 +51,23 @@ const Register = () => {
     }).then((response) => response.json())
     .then((response) => {
       if (response.message == 'Registration successful') {
-        router.push(configData.HOSTNAME + ":3000/login");
+        let login_headers = new Headers();
+        login_headers.set('Content-Type', 'application/json');
+        login_headers.set('Accept', 'application/json');
+        login_headers.set('Authorization', 'Basic ' + Buffer.from(username + ":" + password).toString('base64'));
+        fetch(configData.HOSTNAME + ':5000/login', {
+            headers: login_headers,
+            method: 'POST',
+          }).then((response) => response.json())
+          .then((response) => {
+            if (response.token) {
+              sessionStorage.setItem('token', response['token'])
+              sessionStorage.setItem('Username', username);
+              router.push(configData.HOSTNAME + ':3000/chatpage');
+              return response;
+            }
+          });
+        router.push(configData.HOSTNAME + ':3000/login');
         return response;
       } else {
         setShowError(true);
