@@ -1,9 +1,7 @@
-import { Box, ButtonGroup, Button, Typography, Autocomplete, TextField } from "@mui/material";
-import React, {useEffect,useMemo} from "react";
-import styles from '../../styles.module.css';
-import createMuiTheme from "@mui/material/styles";
-import { useState } from 'react';
-import configData from "../../config.json";
+import { Box, Autocomplete, TextField, 
+    ListItemText, List, ListItem, Divider } from '@mui/material';
+import React, { useEffect } from 'react';
+import configData from '../../config.json';
 
 function ConversationPanel({setConversationMessages}) {
     const [chats, setChats] = React.useState([]);
@@ -97,6 +95,36 @@ function ConversationPanel({setConversationMessages}) {
         });
     }
 
+    const handleChatSelect = (chat) => {
+        sessionStorage.currentChat = chat['id'];
+
+        // call fetch chatid history api here instead of the above setmessages, using value["id"]
+
+        let headers = new Headers();
+        headers.set('Content-Type', 'application/json');
+        headers.set('Accept', 'application/json');
+        headers.set('x-access-token', sessionStorage.token);
+        
+        fetch(configData.HOSTNAME + ":5000/chat/" + chat["id"], {
+        headers: headers,
+        method: 'GET',
+        }).then((response) => 
+        {
+            //console.log(response.text());
+            return response.json();
+        })
+        .then((response) => {
+            console.log("response text:");
+            console.log(response);
+            if (response) {
+                setConversationMessages(response['messages']); // probably need to edit this, i dont know the shape of the data
+                return response;
+            } else {
+                console.log("error fetching message history");
+            }
+        });
+    }
+
     return(
         <Box sx={{
             flexDirection: 'column',
@@ -105,58 +133,25 @@ function ConversationPanel({setConversationMessages}) {
                 m: 1,}, 
         }}>
             <Autocomplete
-                    options={chats}
-                    fullWidth
-                    onChange={handleAutocomplete}
-                    renderInput={(params) => <TextField {...params} variant="filled" label="Chats"/>}
-                />
-            {/* <ButtonGroup
-            orientation="vertical"
-            aria-label="vertical outlined button group"
-            >
-                <Typography sx={{textAlign: "center", width: "125%", marginBottom: "15px"}}>select a conversation</Typography>
-                <Button sx={{width: "125%"}} key="General">General</Button>
-                {users.map((user) =>
-                    <Button sx={{width: "125%"}} key={user}>{user}</Button>
-                )}
-            </ButtonGroup> */}
+                options={chats}
+                fullWidth
+                onChange={handleAutocomplete}
+                renderInput={(params) => <TextField {...params} variant="filled" label="Chats"/>}
+            />
+        <List>
+            {
+                chats.map((chat) => {
+                    console.log(chat)
+                    return (
+                        <ListItem button divider onClick={() => handleChatSelect(chat)}>
+                            <ListItemText primary={chat.label} />
+                        </ListItem>
+                    )
+                })
+            }
+        </List>
         </Box>
     )
 }
-
-// export class ConversationPanel extends React.Component {
-//     constructor() {
-//         const [users, setUsers] = React.useState(["Adam", "Bob", "Claire"]);
-
-//         super();
-//         // this.conversations = [
-//         //     <Button disabled key="0">Select a Conversation:</Button>,
-//         //     <Button key="1">Adam</Button>,
-//         //     <Button key="2">Bob</Button>,
-//         //     <Button key="3">Claire</Button>,
-//         //   ];
-//         this.conversations = users.map((user) =>
-//             <Button>{user}</Button>
-//         )
-//     }
-
-//     render() {
-//         return(
-//             <Box sx={{
-//                 display: 'flex',
-//                 '& > *': { 
-//                     m: 1,}, 
-//             }}>
-//                 <ButtonGroup
-//                 orientation="vertical"
-//                 aria-label="vertical outlined button group"
-//                 >
-//                     seelc a user
-//                     {this.conversations}
-//                 </ButtonGroup>
-//             </Box>
-//         )
-//     }
-// };
 
 export default ConversationPanel;
