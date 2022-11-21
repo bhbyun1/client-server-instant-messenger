@@ -5,13 +5,11 @@ import configData from '../../config.json';
 
 function ConversationPanel({setConversationMessages}) {
     const [chats, setChats] = React.useState([]);
-    // const mockData = {"Adam": [{'username': 'Adam', 'message': 'I\'m Adam'}],
-    //                   "     ": [{'username': 'Bob', 'message': 'I\'m Bob'}],
-    //                   "Claire": [{'username': 'Claire', 'message': 'I\'m Claire'}]};
-    const [messages, setMessages] = React.useState([]);
+    const [selectedChat, setSelectedChat] = React.useState("");
 
     const fetchConversationHistory = (chat) => {
         sessionStorage.currentChat = chat['id'];
+        setSelectedChat(chat['id']);
 
         // Get message history from backend, then save it in state
         let headers = new Headers();
@@ -95,7 +93,9 @@ function ConversationPanel({setConversationMessages}) {
             {
                 chats.map((chat) => {
                     return (
-                        <ListItem button divider onClick={() => fetchConversationHistory(chat)}>
+                        <ListItem button divider
+                         onClick={() => fetchConversationHistory(chat)}
+                         selected={chat.id == selectedChat}>
                             <ListItemText primary={chat.label} />
                         </ListItem>
                     )
