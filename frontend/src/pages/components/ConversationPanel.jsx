@@ -1,36 +1,23 @@
-import { Box, ButtonGroup, Button, Typography, Autocomplete, TextField } from "@mui/material";
-import React, {useEffect,useMemo} from "react";
-import styles from '../../styles.module.css';
-import createMuiTheme from "@mui/material/styles";
-import { useState } from 'react';
-import configData from "../../config.json";
+import { Box, Autocomplete, TextField, 
+    ListItemText, List, ListItem, Divider } from '@mui/material';
+import React, { useEffect } from 'react';
+import configData from '../../config.json';
 
 function ConversationPanel({setConversationMessages}) {
     const [chats, setChats] = React.useState([]);
-    // const mockData = {"Adam": [{'username': 'Adam', 'message': 'I\'m Adam'}],
-    //                   "     ": [{'username': 'Bob', 'message': 'I\'m Bob'}],
-    //                   "Claire": [{'username': 'Claire', 'message': 'I\'m Claire'}]};
-    const [messages, setMessages] = React.useState([]);
+    const [selectedChat, setSelectedChat] = React.useState("");
 
-    const handleAutocomplete = (event, value) => {
-        // setUsers(value);
-        // fetch endpoint for <id> chat history
-        //setMessages(mockData[value]);
-        sessionStorage.currentChat = value['id'];
-        console.log("handling autocomplete");
-        
-        //console.log(event);
-        console.log(value);
-        console.log("value");
+    const fetchConversationHistory = (chat) => {
+        sessionStorage.currentChat = chat['id'];
+        setSelectedChat(chat['id']);
 
-        // call fetch chatid history api here instead of the above setmessages, using value["id"]
-
+        // Get message history from backend, then save it in state
         let headers = new Headers();
         headers.set('Content-Type', 'application/json');
         headers.set('Accept', 'application/json');
         headers.set('x-access-token', sessionStorage.token);
         
-        fetch(configData.HOSTNAME + ':5000/chat/' + value["id"], {
+        fetch(configData.HOSTNAME + ':5000/chat/' + chat['id'], {
         headers: headers,
         method: 'GET',
         }).then((response) => 
@@ -82,8 +69,10 @@ function ConversationPanel({setConversationMessages}) {
                     //console.log("chats:");
                     //console.log(chats);
                 }
+
+                // Set chat to general chat if nothing is currently selected
                 if (!sessionStorage.currentChat) {
-                    handleAutocomplete(null, displayChatroom[0]);
+                    fetchConversationHistory(displayChatroom[0]);
                 }
 
                 return response["chatrooms"];
@@ -91,9 +80,6 @@ function ConversationPanel({setConversationMessages}) {
                 console.log("couldn't fetch chatrooms");
             }
         });
-        //let chatroomList = response['chatrooms'];
-
-        //let chatroomList = accurateMockData["chatrooms"];
     });
 
     return(
@@ -103,59 +89,21 @@ function ConversationPanel({setConversationMessages}) {
             '& > *': { 
                 m: 1,}, 
         }}>
-            <Autocomplete
-                    options={chats}
-                    fullWidth
-                    onChange={handleAutocomplete}
-                    renderInput={(params) => <TextField {...params} variant="filled" label="Chats"/>}
-                />
-            {/* <ButtonGroup
-            orientation="vertical"
-            aria-label="vertical outlined button group"
-            >
-                <Typography sx={{textAlign: "center", width: "125%", marginBottom: "15px"}}>select a conversation</Typography>
-                <Button sx={{width: "125%"}} key="General">General</Button>
-                {users.map((user) =>
-                    <Button sx={{width: "125%"}} key={user}>{user}</Button>
-                )}
-            </ButtonGroup> */}
+        <List>
+            {
+                chats.map((chat) => {
+                    return (
+                        <ListItem button divider
+                         onClick={() => fetchConversationHistory(chat)}
+                         selected={chat.id == selectedChat}>
+                            <ListItemText primary={chat.label} />
+                        </ListItem>
+                    )
+                })
+            }
+        </List>
         </Box>
     )
 }
-
-// export class ConversationPanel extends React.Component {
-//     constructor() {
-//         const [users, setUsers] = React.useState(["Adam", "Bob", "Claire"]);
-
-//         super();
-//         // this.conversations = [
-//         //     <Button disabled key="0">Select a Conversation:</Button>,
-//         //     <Button key="1">Adam</Button>,
-//         //     <Button key="2">Bob</Button>,
-//         //     <Button key="3">Claire</Button>,
-//         //   ];
-//         this.conversations = users.map((user) =>
-//             <Button>{user}</Button>
-//         )
-//     }
-
-//     render() {
-//         return(
-//             <Box sx={{
-//                 display: 'flex',
-//                 '& > *': { 
-//                     m: 1,}, 
-//             }}>
-//                 <ButtonGroup
-//                 orientation="vertical"
-//                 aria-label="vertical outlined button group"
-//                 >
-//                     seelc a user
-//                     {this.conversations}
-//                 </ButtonGroup>
-//             </Box>
-//         )
-//     }
-// };
 
 export default ConversationPanel;
