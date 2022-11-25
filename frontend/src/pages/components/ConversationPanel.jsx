@@ -79,6 +79,9 @@ function ConversationPanel({setConversationMessages}) {
             } else {
                 console.log("couldn't fetch chatrooms");
             }
+        })
+        .catch((error) => {
+            console.log(error);
         });
     });
 

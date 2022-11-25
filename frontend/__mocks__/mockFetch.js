@@ -1,17 +1,27 @@
-const breedsListResponse = {
-    message: {
-        boxer: [],
-        cattledog: [],
-        dalmatian: [],
-        husky: [],
-    },
+const chatList = {
+    'chatrooms': {
+        'name': 'test chat 1',
+        'owner': 'john',
+        'users': ['john', 'luke', 'gabe'],
+        'public_id': '5ccf382c-aa84-49cb-b348-55cc53f53f0f',
+        'messages': [{
+            'id': '7a61658b-9136-4720-b1b6-43c2a264243e',
+            'sent': '2020-07-10 15:00:00.000',
+            'username': 'john',
+            'chatroom': '5ccf382c-aa84-49cb-b348-55cc53f53f0f',
+            'message': 'hey im john'
+        }]
+    }
 };
 
-const dogImagesResponse = {
-    message: [
-        "https://images.dog.ceo/breeds/cattledog-australian/IMG_1042.jpg ",
-        "https://images.dog.ceo/breeds/cattledog-australian/IMG_5177.jpg",
-    ],
+const chatMessages = {
+    'messages': [{
+        'id': '7a61658b-9136-4720-b1b6-43c2a264243e',
+        'sent': '2020-07-10 15:00:00.000',
+        'username': 'john',
+        'chatroom': '5ccf382c-aa84-49cb-b348-55cc53f53f0f',
+        'message': 'hey im john'
+    }]
 };
 
 export default async function mockFetch(url) {
@@ -20,15 +30,14 @@ export default async function mockFetch(url) {
             return {
                 ok: true,
                 status: 200,
-                json: async () => breedsListResponse,
+                json: async () => chatList,
             };
         }
-        case "https://dog.ceo/api/breed/husky/images" :
-        case "https://dog.ceo/api/breed/cattledog/images": {
+        case "https://localhost:5000/chat/5ccf382c-aa84-49cb-b348-55cc53f53f0f": {
             return {
                 ok: true,
                 status: 200,
-                json: async () => dogImagesResponse,
+                json: async () => chatMessages
             };
         }
         default: {
