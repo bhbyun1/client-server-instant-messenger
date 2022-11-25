@@ -53,6 +53,9 @@ function ConversationPanel({setConversationMessages}) {
             } else {
                 console.log("couldn't fetch chatrooms");
             }
+        })
+        .catch((error) => {
+            console.log(error);
         });
         //let chatroomList = response['chatrooms'];
 
@@ -95,6 +98,9 @@ function ConversationPanel({setConversationMessages}) {
             } else {
                 console.log("error fetching message history");
             }
+        })
+        .catch((error) => {
+            console.log(error);
         });
     }
 
