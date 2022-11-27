@@ -39,6 +39,7 @@ function ConversationPanel({setConversationMessages}) {
     
     useEffect(() => {
         //let chatroomList = []
+        // console.log(chats);
         let headers = new Headers();
         //headers.set('Content-Type', 'application/json');
         //headers.set('Accept', 'application/json');
@@ -53,21 +54,21 @@ function ConversationPanel({setConversationMessages}) {
                 let chatroomList = response["chatrooms"];
 
                 let displayChatroom = []
-                //console.log("chatroomList:");
-                //console.log(chatroomList);
+                //// console.log("chatroomList:");
+                //// console.log(chatroomList);
                 for (let i = 0; i < chatroomList.length; i++) {
                     let chatroom = chatroomList[i];
-                    //console.log(chatroom)
+                    //// console.log(chatroom)
                     if (chatroom["users"].includes(sessionStorage.Username)) {
                         displayChatroom.push({"label": chatroom["name"], "id": chatroom["public_id"]});
                     }
                 }
-                //console.log("chats:");
-                //console.log(chats);
+                //// console.log("chats:");
+                //// console.log(chats);
                 if (JSON.stringify(chats) != JSON.stringify(displayChatroom)) {
                     setChats(displayChatroom);
-                    //console.log("chats:");
-                    //console.log(chats);
+                    // console.log("chats:");
+                    //// console.log(chats);
                 }
 
                 // Set chat to general chat if nothing is currently selected
@@ -77,11 +78,11 @@ function ConversationPanel({setConversationMessages}) {
 
                 return response["chatrooms"];
             } else {
-                console.log("couldn't fetch chatrooms");
+                // console.log("couldn't fetch chatrooms");
             }
         })
         .catch((error) => {
-            console.log(error);
+            // console.log(error);
         });
     });
 
