@@ -17,6 +17,7 @@ function ConversationPanel({setConversationMessages}) {
     
     useEffect(() => {
         //let chatroomList = []
+        // console.log(chats);
         let headers = new Headers();
         //headers.set('Content-Type', 'application/json');
         //headers.set('Accept', 'application/json');
@@ -31,31 +32,31 @@ function ConversationPanel({setConversationMessages}) {
                 let chatroomList = response["chatrooms"];
 
                 let displayChatroom = []
-                //console.log("chatroomList:");
-                //console.log(chatroomList);
+                //// console.log("chatroomList:");
+                //// console.log(chatroomList);
                 for (let i = 0; i < chatroomList.length; i++) {
                     let chatroom = chatroomList[i];
-                    //console.log(chatroom)
+                    //// console.log(chatroom)
                     if (chatroom["users"].includes(sessionStorage.Username)) {
                         displayChatroom.push({"label": chatroom["name"], "id": chatroom["public_id"]});
                     }
                 }
-                //console.log("chats:");
-                //console.log(chats);
+                //// console.log("chats:");
+                //// console.log(chats);
                 if (JSON.stringify(chats) != JSON.stringify(displayChatroom)) {
                     setChats(displayChatroom);
-                    //console.log("chats:");
-                    //console.log(chats);
+                    // console.log("chats:");
+                    //// console.log(chats);
                 }
 
 
                 return response["chatrooms"];
             } else {
-                console.log("couldn't fetch chatrooms");
+                // console.log("couldn't fetch chatrooms");
             }
         })
         .catch((error) => {
-            console.log(error);
+            // console.log(error);
         });
         //let chatroomList = response['chatrooms'];
 
@@ -68,11 +69,11 @@ function ConversationPanel({setConversationMessages}) {
         //setMessages(mockData[value]);
         setCurrentChat(value);
         sessionStorage.currentChat = value['id'];
-        console.log("handling autocomplete");
+        // console.log("handling autocomplete");
         
-        //console.log(event);
-        console.log(value);
-        console.log("value");
+        //// console.log(event);
+        // console.log(value);
+        // console.log("value");
 
         // call fetch chatid history api here instead of the above setmessages, using value["id"]
 
@@ -86,21 +87,21 @@ function ConversationPanel({setConversationMessages}) {
         method: 'GET',
         }).then((response) => 
         {
-            //console.log(response.text());
+            //// console.log(response.text());
             return response.json();
         })
         .then((response) => {
-            console.log("response text:");
-            console.log(response);
+            // console.log("response text:");
+            // console.log(response);
             if (response) {
                 setConversationMessages(response['messages']); // probably need to edit this, i dont know the shape of the data
                 return response;
             } else {
-                console.log("error fetching message history");
+                // console.log("error fetching message history");
             }
         })
         .catch((error) => {
-            console.log(error);
+            // console.log(error);
         });
     }
 
@@ -111,10 +112,11 @@ function ConversationPanel({setConversationMessages}) {
             '& > *': { 
                 m: 1,}, 
         }}>
-            <Typography>
+            <Typography data-testid="selectAChat">
                 Select a Chat
             </Typography>
             <Autocomplete
+                    data-testid="autocomp"
                     options={chats}
                     sx={{ width: 300 }}
                     onChange={handleAutocomplete}

@@ -1,36 +1,19 @@
 import React from 'react';
-import {render, screen} from '@testing-library/react';
+import {fireEvent, getByRole, getByTestId, render, screen} from '@testing-library/react';
 import mockFetch from '../__mocks__/mockFetch';
-import { Box } from '@mui/material';
+import { Autocomplete, Box, Typography } from '@mui/material';
+import { shallow } from 'enzyme';
+import { within } from '@testing-library/react';
+import { useState } from 'react';
+import { act } from '@testing-library/react';
 
 import ConversationPanel from '../src/pages/components/ConversationPanel';
 
 describe("ConversationPanel", () => {
-    // let originalFetch;
-
-    // beforeEach(() => {
-    //     originalFetch = global.fetch;
-    //     global.fetch = jest.fn(() => Promise.resolve({
-    //         json: () => Promise.resolve({
-    //             value: "Testing something!"
-    //         })
-    //     }));
-    // });
-
-    // afterEach(() => {
-    //     global.fetch = originalFetch;
-    // });
-
     beforeEach(() => {
-        // jest.spyOn(window, "fetch").mockImplementation(mockFetch);
-        // globalThis.fetch = jest.fn().mockImplementation(() => Promise.resolve({
-        //     json: () => Promise.resolve ({
-        //         mockFetch
-        //     })
-        // }))
         global.fetch = jest.fn(() => Promise.resolve({
             json: () => Promise.resolve({
-                'chatrooms': {
+                'chatrooms': [{
                     'name': 'test chat 1',
                     'owner': 'john',
                     'users': ['john', 'luke', 'gabe'],
@@ -42,28 +25,52 @@ describe("ConversationPanel", () => {
                         'chatroom': '5ccf382c-aa84-49cb-b348-55cc53f53f0f',
                         'message': 'hey im john'
                     }]
-                }
+                },
+                {
+                    'name': 'test chat 2a',
+                    'owner': 'notjohn',
+                    'users': ['notjohn', 'luke', 'gabe'],
+                    'public_id': '5b61fe4c-25e9-41f5-8132-52847a72ae4d',
+                    'messages': [{
+                        'id': '581e58ca-ab5f-4921-81db-e3df5334fe8d',
+                        'sent': '2020-07-10 15:00:00.000',
+                        'username': 'notjohn',
+                        'chatroom': '5b61fe4c-25e9-41f5-8132-52847a72ae4d',
+                        'message': 'hey im notjohn'
+                    }]
+                }]
             })
         }))
     })
 
     it("renders without crashing", () => {
-        render(<ConversationPanel/>);
+        shallow(<ConversationPanel/>);
     }),
     it("check things are not missing", () => {
-        render(<ConversationPanel/>);
-    });
+        const app = shallow(<ConversationPanel/>);
+        app.find(<Box/>);
+        app.find(<Typography/>);
+    }),
+    it("check fetch is correct", async () => {
+        sessionStorage.setItem('Username', 'luke');
+        const realUseState = React.useState;
+        const mockInitialState = [
+            {'label': 'test chat 1', 'id': '5ccf382c-aa84-49cb-b348-55cc53f53f0f'},
+            {'label': 'test chat 2a', 'id': '5b61fe4c-25e9-41f5-8132-52847a72ae4d'}
+        ];
+        jest.spyOn(React, 'useState').mockImplementationOnce(() => realUseState(mockInitialState));
+        const app = await act (async () => render(<ConversationPanel setConversationMessages={(e) => console.log(e)}/>));
+        const autocomplete = await screen.getByTestId("autocomp");
+        const input = within(autocomplete).getByRole('combobox');
+
+        const dropdownButton = within(autocomplete).getByTestId('ArrowDropDownIcon');
+        fireEvent.click(dropdownButton);
+        fireEvent.keyDown(autocomplete, { key: 'ArrowDown' });
+        fireEvent.keyDown(autocomplete, { key: 'Enter'});
+        expect(input.value).toBe('test chat 1');
+        fireEvent.keyDown(autocomplete, { key: 'ArrowDown' });
+        fireEvent.keyDown(autocomplete, { key: 'ArrowDown' });
+        fireEvent.keyDown(autocomplete, { key: 'Enter'});
+        expect(input.value).toBe('test chat 2a');
+    })
 })
-
-
-// const ConversationPanel = require('../src/components/ConversationPanel.js');
-
-// jest.mock('../src/components/ConversationPanel.js');
-
-// const mockMethod = jest.fn();
-
-// ConversationPanel.mockImp
-
-// it("test", async () => {
-    
-// })
