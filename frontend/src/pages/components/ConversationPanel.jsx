@@ -26,8 +26,8 @@ function ConversationPanel({setConversationMessages}) {
             return response.json();
         })
         .then((response) => {
-            console.log("response text:");
-            console.log(response);
+            // console.log("response text:");
+            // console.log(response);
             if (response) {
                 setConversationMessages(response['messages']); // probably need to edit this, i dont know the shape of the data
                 return response;
@@ -93,13 +93,15 @@ function ConversationPanel({setConversationMessages}) {
             '& > *': { 
                 m: 1,}, 
         }}>
-        <List>
+        <List data-testid="selectAChat">
             {
                 chats.map((chat) => {
                     return (
                         <ListItem button divider
                          onClick={() => fetchConversationHistory(chat)}
-                         selected={chat.id == selectedChat}>
+                         selected={chat.id == selectedChat}
+                         key={chat.id}
+                         data-testid="chatListItem">
                             <ListItemText primary={chat.label} />
                         </ListItem>
                     )

@@ -6,6 +6,7 @@ import { shallow } from 'enzyme';
 import { within } from '@testing-library/react';
 import { useState } from 'react';
 import { act } from '@testing-library/react';
+import '@testing-library/jest-dom/extend-expect'
 
 import ConversationPanel from '../src/pages/components/ConversationPanel';
 
@@ -51,7 +52,7 @@ describe("ConversationPanel", () => {
         app.find(<Box/>);
         app.find(<Typography/>);
     }),
-    it("check fetch is correct", async () => {
+    it("check chat list contains correct items", async () => {
         sessionStorage.setItem('Username', 'luke');
         const realUseState = React.useState;
         const mockInitialState = [
@@ -60,17 +61,12 @@ describe("ConversationPanel", () => {
         ];
         jest.spyOn(React, 'useState').mockImplementationOnce(() => realUseState(mockInitialState));
         const app = await act (async () => render(<ConversationPanel setConversationMessages={(e) => console.log(e)}/>));
-        const autocomplete = await screen.getByTestId("autocomp");
-        const input = within(autocomplete).getByRole('combobox');
-
-        const dropdownButton = within(autocomplete).getByTestId('ArrowDropDownIcon');
-        fireEvent.click(dropdownButton);
-        fireEvent.keyDown(autocomplete, { key: 'ArrowDown' });
-        fireEvent.keyDown(autocomplete, { key: 'Enter'});
-        expect(input.value).toBe('test chat 1');
-        fireEvent.keyDown(autocomplete, { key: 'ArrowDown' });
-        fireEvent.keyDown(autocomplete, { key: 'ArrowDown' });
-        fireEvent.keyDown(autocomplete, { key: 'Enter'});
-        expect(input.value).toBe('test chat 2a');
+        const list = screen.getByTestId("selectAChat");
+        const listItem1 = within(list).getByText("test chat 1");
+        expect(listItem1).toBeTruthy();
+        const listItem2 = within(list).getByText("test chat 2a");
+        expect(listItem2).toBeTruthy();
+        const nonexistentItem = within(list).queryByText("test chat 3");
+        expect(nonexistentItem).toBeFalsy();
     })
 })
