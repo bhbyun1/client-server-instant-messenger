@@ -58,7 +58,6 @@ function CreateChat(props) {
     const handleAutocomplete = (event, value) => {
         //setChatMembers(oldChatMembersList => [...oldChatMembersList, value])
         setChatMembers(value);
-        console.log(value);
     }
 
     const handleSubmit = (value) => {
@@ -84,7 +83,6 @@ function CreateChat(props) {
     }
 
     const handleClose = (value) => {
-        console.log(value);
         onClose(value);
     }
 
@@ -98,7 +96,7 @@ function CreateChat(props) {
     // a
 
     return (
-        <Dialog open={open} onClose={handleClose}>
+        <Dialog open={open} onClose={handleClose} data-testid={'dialog'}>
             <DialogTitle>Create a New Chat</DialogTitle>
             {/* <DialogContent>
                 <DialogContentText>
@@ -114,7 +112,7 @@ function CreateChat(props) {
                 />
             </DialogContent> */}
             <br></br>
-            <DialogContent>
+            <DialogContent data-testid={'dialogcontent'}>
                 <TextField
                     label='Chat Name'
                     error={!isChatNameValid}
@@ -122,6 +120,8 @@ function CreateChat(props) {
                     helperText={isChatNameValid ? "" : "Invalid chat name."}
                     required
                     sx={{width: 300}}
+                    // inputProps={{ "data-testid": "content-input" }}
+                    data-testid={'search-text-field'}
                 />
                 <br></br>
                 <br></br>
@@ -131,11 +131,12 @@ function CreateChat(props) {
                     sx={{ width: 300 }}
                     onChange={handleAutocomplete}
                     renderInput={(params) => <TextField {...params} variant="filled" label="Users"/>}
+                    data-testid={'autocomp'}
                 />
             </DialogContent>
             <DialogActions>
-                <Button onClick={handleClose}>Cancel</Button>
-                <Button onClick={handleSubmit}>Submit</Button>
+                <Button data-testid={'cancel'} onClick={handleClose}>Cancel</Button>
+                <Button data-testid={'submit'} onClick={handleSubmit}>Submit</Button>
             </DialogActions>
         </Dialog>
     );

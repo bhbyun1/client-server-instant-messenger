@@ -48,7 +48,9 @@ function ConversationPanel({setConversationMessages}) {
         fetch(configData.HOSTNAME + ":5000/chat", {
         headers: headers,
         method: 'GET',
-        }).then((response) => response.json())
+        }).then((response) => {
+            return response.json()
+        })
         .then((response) => {
             if (response) {
                 let chatroomList = response["chatrooms"];
