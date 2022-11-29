@@ -1,7 +1,7 @@
 import React, {useContext} from "react";
 import styles from '../styles.module.css'
 import { Button, AppBar, Toolbar, Typography, TextField, IconButton, Box, Alert, AlertTitle } from '@mui/material';
-import useRouter from 'next/router';
+import { useRouter } from 'next/router';
 // import Router from "react-router-dom";
 import configData from "../config.json";
 
@@ -9,7 +9,7 @@ const Login = () => {
   const [user, setUser] = React.useState({username: '', password: ''});
   // updates state for displaying eror when email/password is incorrect
   const [showError, setShowError] = React.useState(false);
-  const router = useRouter;
+  const router = useRouter();
   const handleInputChange = (event) => {
     // grabs data from input boxes
     const {value, name} = event.target;
@@ -61,7 +61,7 @@ const Login = () => {
             </IconButton>
           </Toolbar>
         </AppBar>
-        {showError && <Alert severity="error">
+        {showError && <Alert data-testid='alert' severity="error">
           <AlertTitle>Error</AlertTitle>
           Login failed. Invalid username or password.
         </Alert>}
@@ -72,6 +72,7 @@ const Login = () => {
             title='username'
             label='username'
             name='username'
+            data-testid='username'
             onChange={handleInputChange}
             required
             sx={{my: '2%', width: '300px'}}
@@ -82,6 +83,7 @@ const Login = () => {
             label='password'
             name='password'
             type='password'
+            data-testid='password'
             onChange={handleInputChange}
             required
             sx={{my: '3%', width: '300px'}}
@@ -89,7 +91,7 @@ const Login = () => {
           <Button
             variant='contained'
             type='submit'
-            // onClick={onSubmit}
+            data-testid='submit'
             sx={{my: '3%', width: '300px'}}>
             Login
           </Button>

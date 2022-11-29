@@ -26,8 +26,8 @@ function ConversationPanel({setConversationMessages}) {
             return response.json();
         })
         .then((response) => {
-            console.log("response text:");
-            console.log(response);
+            // console.log("response text:");
+            // console.log(response);
             if (response) {
                 setConversationMessages(response['messages']); // probably need to edit this, i dont know the shape of the data
                 return response;
@@ -39,6 +39,7 @@ function ConversationPanel({setConversationMessages}) {
     
     useEffect(() => {
         //let chatroomList = []
+        // console.log(chats);
         let headers = new Headers();
         //headers.set('Content-Type', 'application/json');
         //headers.set('Accept', 'application/json');
@@ -47,27 +48,29 @@ function ConversationPanel({setConversationMessages}) {
         fetch(configData.HOSTNAME + ":5000/chat", {
         headers: headers,
         method: 'GET',
-        }).then((response) => response.json())
+        }).then((response) => {
+            return response.json()
+        })
         .then((response) => {
             if (response) {
                 let chatroomList = response["chatrooms"];
 
                 let displayChatroom = []
-                //console.log("chatroomList:");
-                //console.log(chatroomList);
+                //// console.log("chatroomList:");
+                //// console.log(chatroomList);
                 for (let i = 0; i < chatroomList.length; i++) {
                     let chatroom = chatroomList[i];
-                    //console.log(chatroom)
+                    //// console.log(chatroom)
                     if (chatroom["users"].includes(sessionStorage.Username)) {
                         displayChatroom.push({"label": chatroom["name"], "id": chatroom["public_id"]});
                     }
                 }
-                //console.log("chats:");
-                //console.log(chats);
+                //// console.log("chats:");
+                //// console.log(chats);
                 if (JSON.stringify(chats) != JSON.stringify(displayChatroom)) {
                     setChats(displayChatroom);
-                    //console.log("chats:");
-                    //console.log(chats);
+                    // console.log("chats:");
+                    //// console.log(chats);
                 }
 
                 // Set chat to general chat if nothing is currently selected
@@ -77,8 +80,11 @@ function ConversationPanel({setConversationMessages}) {
 
                 return response["chatrooms"];
             } else {
-                console.log("couldn't fetch chatrooms");
+                // console.log("couldn't fetch chatrooms");
             }
+        })
+        .catch((error) => {
+            // console.log(error);
         });
     });
 
@@ -89,13 +95,15 @@ function ConversationPanel({setConversationMessages}) {
             '& > *': { 
                 m: 1,}, 
         }}>
-        <List>
+        <List data-testid="selectAChat">
             {
                 chats.map((chat) => {
                     return (
                         <ListItem button divider
                          onClick={() => fetchConversationHistory(chat)}
-                         selected={chat.id == selectedChat}>
+                         selected={chat.id == selectedChat}
+                         key={chat.id}
+                         data-testid="chatListItem">
                             <ListItemText primary={chat.label} />
                         </ListItem>
                     )
