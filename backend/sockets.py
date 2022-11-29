@@ -2,8 +2,8 @@ import jwt
 from flask import request
 from flask_socketio import emit, join_room
 from sqlalchemy import exc
-from app import socketio, app, db
-from db.model import User, Chatroom, Message
+from .app import socketio, app, db
+from .db.model import User, Chatroom, Message
 import datetime
 
 
