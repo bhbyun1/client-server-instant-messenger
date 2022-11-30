@@ -1,7 +1,7 @@
 # Testing
 
 * To run frontend tests, go to `/frontend` and run `npm test`
-* To run backend tests, go to `/backend` and run `INSERT COMMAND HERE`
+* To run backend tests, go to `/backend` and run `pytest`
 
 ## Frontend
 * Login tests: Nithin
