@@ -5,11 +5,11 @@ import IconButton from '@mui/material/IconButton';
 import TextField from '@mui/material/TextField';
 import InputAdornment from '@mui/material/InputAdornment';
 import SendIcon from '@mui/icons-material/Send';
-import styles from '../../styles.module.css';
+import styles from '../styles.module.css';
 import CreateChat from "./CreateChat";
 import { io } from "socket.io-client";
 import { Button, Typography } from "@mui/material";
-import configData from "../../config.json";
+import configData from "../config.json";
 
 export default function WebSocketCall({ socket }) {
   const [message, setMessage] = useState("");

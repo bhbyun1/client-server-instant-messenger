@@ -8,7 +8,7 @@ import { useState } from 'react';
 import { act } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect'
 
-import ConversationPanel from '../src/pages/components/ConversationPanel';
+import ConversationPanel from '../src/components/ConversationPanel';
 
 describe("ConversationPanel", () => {
     beforeEach(() => {

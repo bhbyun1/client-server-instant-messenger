@@ -1,7 +1,7 @@
-import WebSocketCall from "./components/WebSocketCall";
+import WebSocketCall from "../components/WebSocketCall";
 import { io } from "socket.io-client";
 import React, { useEffect, useState } from "react";
-import CreateChat from "./components/CreateChat";
+import CreateChat from "../components/CreateChat";
 import { Button, AppBar, Toolbar, Typography, IconButton } from '@mui/material';
 import configData from "../config.json";
 
