@@ -186,13 +186,12 @@ def create_chatroom(user):
 @app.route('/chat/<chat_id>', methods=['GET'])
 @authenticate
 def get_chat_history(user, chat_id):
-    """Gets the chat history if the user is in the chat or the user is an 
+    """Gets the chat history if the user is in the chat or the user is an
     admin.
 
     Args:
         user (User): The authenticated user making the request
         chat_id (int): ID for the chatroom to join
-
     Returns:
         flask.Response: The Response object
     """
