@@ -15,7 +15,7 @@ load_dotenv()
 def init_db():
     """workaround to init the db with first admin and first chatroom"""
     first_chat = db.session.execute(
-        db.select(Chatroom).order_by(Chatroom.id)).scalars().one_or_none()
+        db.select(Chatroom).order_by(Chatroom.id)).scalars().first()
     admin_user = db.session.execute(
         db.select(User).filter_by(username='admin')).scalars().one_or_none()
     if not admin_user:
@@ -84,7 +84,6 @@ def root():
 @authenticate
 def get_users(user):
     """doc string."""
-    print(f"access by {user}")
     users = db.session.execute(db.select(User).order_by(User.id)).scalars()
     return jsonify({
         "users": [user.username for user in users]
@@ -98,7 +97,6 @@ def register():
     if not data['password'] or not data['username']:
         return jsonify({'message': 'Invalid Request'}), 400
     hashed_password = generate_password_hash(data['password'], method='sha256')
-
     first_chatroom = db.session.execute(
         db.select(Chatroom).order_by(Chatroom.id)).scalars().first()
 

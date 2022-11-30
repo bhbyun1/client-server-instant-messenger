@@ -23,13 +23,6 @@ def disconnect():
          "data": f"id: {request.sid} has disconnected"}, broadcast=True)
 
 
-@socketio.on('data')
-def handle_data(data):
-    """listener for data events"""
-    print("data from the front end: ", data)
-    emit("data", {'data': data, 'id': request.sid}, broadcast=True)
-
-
 @socketio.on('join')
 def handle_join(data):
     """listener for data events"""
@@ -42,6 +35,7 @@ def handle_join(data):
             id=token['id'])).scalars().one()
     except (jwt.InvalidIssuedAtError,
             jwt.ExpiredSignatureError,
+            jwt.DecodeError,
             exc.SQLAlchemyError):
         return False, 401
     for room in user.chatrooms:
@@ -54,8 +48,11 @@ def handle_join(data):
 
 @socketio.on('message')
 def handle_message(data):
-    if not data['token'] or not data['content'] or not data['public_id']:
-        print("not token or content or pubid")
+    print(data)
+    if not data.get('token') or\
+            not data.get('content') or\
+            not data.get('public_id'):
+        print("Invalid request")
         return False
     try:
         token = jwt.decode(
@@ -65,7 +62,7 @@ def handle_message(data):
         chatroom = db.session.execute(
             db.select(Chatroom).filter_by(public_id=data['public_id'])
         ).scalars().one_or_none()
-        if user not in chatroom.users:
+        if not chatroom or user not in chatroom.users:
             print(f"User: {user} is not a member of chatroom: {chatroom}")
             return False
     except (jwt.InvalidIssuedAtError,
@@ -87,6 +84,7 @@ def handle_message(data):
     except exc.SQLAlchemyError as err:
         print(err)
         return False, err
+    print('success')
     emit('message', message.as_dict(), to=data['public_id'])
 
 
