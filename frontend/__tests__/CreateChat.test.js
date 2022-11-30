@@ -68,6 +68,7 @@ describe("CreateChat", () => {
     
         fireEvent.change(field , {target: { value: 'my chat'}});
         expect(field.value).toBe('my chat');
+        console.log(field)
 
         const dropdownArrow = screen.getByTestId('ArrowDropDownIcon');
         fireEvent.click(dropdownArrow);
@@ -76,12 +77,47 @@ describe("CreateChat", () => {
         const input = within(autocomplete).getByRole('combobox');
         fireEvent.keyDown(autocomplete, { key: 'ArrowDown' });
         fireEvent.keyDown(autocomplete, { key: 'Enter'});
-        // expect(input.value).toBe('');
 
         const submit = screen.getByTestId("submit");
         fireEvent.click(submit);
 
-        const a = screen.getByTestId("autocomp");
         expect(global.fetch).toHaveBeenCalledTimes(2);
+    }),
+    it("create a chat but invalid name", async () => {
+        const realUseState = React.useState;
+        const mockInitialState = [
+            'john',
+            'luke',
+            'ken',
+            'marley'
+        ];
+        jest.spyOn(React, 'useState').mockImplementationOnce(() => realUseState(mockInitialState));
+
+        const app = await act (async () => render(<CreateChat
+            onClose={(e) => console.log}
+            selectedValue={''}
+            open={true}/>)
+        );
+
+        global.setChatName = await jest.fn((chatName) => console.log(chatName));
+
+        const field  = screen.getByTestId('search-text-field').querySelector('input');
+        expect(field).toBeInTheDocument();
+    
+        fireEvent.change(field , {target: { value: "can't"}});
+        expect(field.value).toBe("can't");
+
+        const dropdownArrow = screen.getByTestId('ArrowDropDownIcon');
+        fireEvent.click(dropdownArrow);
+
+        const autocomplete = screen.getByTestId("autocomp");
+        const input = within(autocomplete).getByRole('combobox');
+        fireEvent.keyDown(autocomplete, { key: 'ArrowDown' });
+        fireEvent.keyDown(autocomplete, { key: 'Enter'});
+
+        const submit = screen.getByTestId("submit");
+        fireEvent.click(submit);
+
+        expect(global.fetch).toHaveBeenCalledTimes(1);
     })
 }); 
