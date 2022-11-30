@@ -76,6 +76,12 @@ describe("CreateChat", () => {
         const input = within(autocomplete).getByRole('combobox');
         fireEvent.keyDown(autocomplete, { key: 'ArrowDown' });
         fireEvent.keyDown(autocomplete, { key: 'Enter'});
-        expect(input.value).toBe('');
+        // expect(input.value).toBe('');
+
+        const submit = screen.getByTestId("submit");
+        fireEvent.click(submit);
+
+        const a = screen.getByTestId("autocomp");
+        expect(global.fetch).toHaveBeenCalledTimes(2);
     })
 }); 
