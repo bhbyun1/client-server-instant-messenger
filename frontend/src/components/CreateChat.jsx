@@ -67,7 +67,6 @@ function CreateChat(props) {
         const headers = new Headers();
         headers.set('Content-Type', 'application/json');
         headers.set('x-access-token', sessionStorage.getItem('token'));
-        chatMembers = [sessionStorage.getItem("Username"), ...chatMembers]
         fetch(configData.HOSTNAME + ":5000/chat", {
             headers: headers,
             method: 'POST',
