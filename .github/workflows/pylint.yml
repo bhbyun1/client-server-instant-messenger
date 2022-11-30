@@ -18,6 +18,6 @@ jobs:
       uses: py-actions/flake8@v2.2.1 
       with:
         exclude: ".git,__pycache__,alembic,app.py" 
-        args: "--per-file-ignores=app.py:F403,F401"
+        args: "--per-file-ignores=__init__.py:F403,F401"
         max-line-length: "100"
         

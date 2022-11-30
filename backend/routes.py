@@ -1,13 +1,13 @@
 import jwt
 from os import environ
-from db.model import User, Chatroom
 from werkzeug.security import check_password_hash, generate_password_hash
-from app import app, db
 from flask import request, make_response, jsonify
 from functools import wraps
 import datetime
 from dotenv import load_dotenv
 from sqlalchemy import exc
+from .app import app, db
+from .db.model import User, Chatroom
 load_dotenv()
 
 
@@ -15,7 +15,7 @@ load_dotenv()
 def init_db():
     """workaround to init the db with first admin and first chatroom"""
     first_chat = db.session.execute(
-        db.select(Chatroom).order_by(Chatroom.id)).scalars().one_or_none()
+        db.select(Chatroom).order_by(Chatroom.id)).scalars().first()
     admin_user = db.session.execute(
         db.select(User).filter_by(username='admin')).scalars().one_or_none()
     if not admin_user:
@@ -75,7 +75,7 @@ def authenticate(func):
 
 @app.route("/")
 def root():
-    """returns object with filler data"""
+    """returns object with filler data."""
     data = {'data': 'Root accessed. Secret token is ' + app.config['SECRET']}
     return jsonify(data)
 
@@ -83,8 +83,7 @@ def root():
 @app.route('/user')
 @authenticate
 def get_users(user):
-    """doc string"""
-    print(f"access by {user}")
+    """doc string."""
     users = db.session.execute(db.select(User).order_by(User.id)).scalars()
     return jsonify({
         "users": [user.username for user in users]
@@ -93,12 +92,11 @@ def get_users(user):
 
 @app.route('/user', methods=['POST'])
 def register():
-    """this is empty"""
+    """this is empty."""
     data = request.get_json()
     if not data['password'] or not data['username']:
         return jsonify({'message': 'Invalid Request'}), 400
     hashed_password = generate_password_hash(data['password'], method='sha256')
-
     first_chatroom = db.session.execute(
         db.select(Chatroom).order_by(Chatroom.id)).scalars().first()
 
@@ -127,7 +125,7 @@ def register():
 
 @app.route('/login', methods=['POST'])
 def login():
-    """login POST method"""
+    """login POST method."""
     auth = request.authorization
     bad_request = make_response('Invalid request', 401, {
                                 'Authentication': 'Login required'})
@@ -159,7 +157,7 @@ def login():
 @app.route('/chat', methods=['POST'])
 @authenticate
 def create_chatroom(user):
-    """create chatroom"""
+    """create chatroom."""
     data = request.get_json()
     if not data['name']:
         return jsonify({'message': 'Invalid Request'}), 400
@@ -188,12 +186,12 @@ def create_chatroom(user):
 @app.route('/chat/<chat_id>', methods=['GET'])
 @authenticate
 def get_chat_history(user, chat_id):
-    """Gets the chat history if the user is in the chat or the user is an admin
+    """Gets the chat history if the user is in the chat or the user is an
+    admin.
 
     Args:
         user (User): The authenticated user making the request
         chat_id (int): ID for the chatroom to join
-
     Returns:
         flask.Response: The Response object
     """
@@ -220,7 +218,7 @@ def get_chatrooms(user):
 @app.route('/chat/<chat_id>', methods=['POST'])
 @authenticate
 def join_chat(user, chat_id):
-    """Attempts to join the user to the specified chat
+    """Attempts to join the user to the specified chat.
 
     Args:
         user (User): The authenticated user making the request
