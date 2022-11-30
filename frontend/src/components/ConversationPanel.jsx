@@ -1,7 +1,7 @@
 import { Box, Autocomplete, TextField, 
     ListItemText, List, ListItem, Divider } from '@mui/material';
 import React, { useEffect } from 'react';
-import configData from '../../config.json';
+import configData from '../config.json';
 
 function ConversationPanel({setConversationMessages}) {
     const [chats, setChats] = React.useState([]);

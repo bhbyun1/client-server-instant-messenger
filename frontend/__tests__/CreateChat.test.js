@@ -9,7 +9,7 @@ import { act } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import user from '@testing-library/user-event';
 
-import CreateChat from '../src/pages/components/CreateChat';
+import CreateChat from '../src/components/CreateChat';
 
 describe("CreateChat", () => {
     beforeEach(() => {

@@ -8,7 +8,7 @@ import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
 import Button from "@mui/material/Button";
 import Chip from "@mui/material/Chip";
-import configData from "../../config.json";
+import configData from "../config.json";
 
 //a
 function CreateChat(props) {
