@@ -1,7 +1,6 @@
 import { Box, Autocomplete, TextField, 
     ListItemText, List, ListItem, Divider } from '@mui/material';
 import React, { useEffect } from 'react';
-import configData from '../config.json';
 
 function ConversationPanel({setConversationMessages}) {
     const [chats, setChats] = React.useState([]);
@@ -17,9 +16,9 @@ function ConversationPanel({setConversationMessages}) {
         headers.set('Accept', 'application/json');
         headers.set('x-access-token', sessionStorage.token);
         
-        fetch(configData.HOSTNAME + ':5000/chat/' + chat['id'], {
-        headers: headers,
-        method: 'GET',
+        fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOSTNAME}/chat/${chat['id']}`, {
+            headers: headers,
+            method: 'GET',
         }).then((response) => 
         {
             //console.log(response.text());
@@ -45,7 +44,7 @@ function ConversationPanel({setConversationMessages}) {
         //headers.set('Accept', 'application/json');
         headers.set('x-access-token', sessionStorage.token);
         
-        fetch(configData.HOSTNAME + ":5000/chat", {
+        fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOSTNAME}/chat`, {
         headers: headers,
         method: 'GET',
         }).then((response) => {

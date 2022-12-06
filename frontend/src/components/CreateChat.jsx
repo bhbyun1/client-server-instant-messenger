@@ -8,7 +8,6 @@ import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
 import Button from "@mui/material/Button";
 import Chip from "@mui/material/Chip";
-import configData from "../config.json";
 
 //a
 function CreateChat(props) {
@@ -34,7 +33,7 @@ function CreateChat(props) {
         const headers = new Headers();
         headers.set('Content-Type', 'application/json');
         headers.set('x-access-token', sessionStorage.getItem('token'));
-        fetch(configData.HOSTNAME + ":5000/user", {
+        fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOSTNAME}/user`, {
             headers: headers,
             method: 'GET'
         }).then((response) => {
@@ -67,7 +66,7 @@ function CreateChat(props) {
         const headers = new Headers();
         headers.set('Content-Type', 'application/json');
         headers.set('x-access-token', sessionStorage.getItem('token'));
-        fetch(configData.HOSTNAME + ":5000/chat", {
+        fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOSTNAME}/chat`, {
             headers: headers,
             method: 'POST',
             body: JSON.stringify({'name': chatName, 'users': chatMembers})

@@ -30,11 +30,11 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint",
-    "test": "jest"
+    "dev": "cd frontend && next dev",
+    "build": "cd frontend && next build",
+    "start": "cd frontend && next start -p $PORT",
+    "lint": "cd frontend && next lint",
+    "test": "cd frontend && jest"
   },
   "jest": {
     "moduleNameMapper": {

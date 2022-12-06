@@ -4,10 +4,14 @@
 #
 #    pip-compile
 #
+attrs==22.1.0
+    # via pytest
 bidict==0.22.0
     # via python-socketio
 click==8.1.3
     # via flask
+exceptiongroup==1.0.4
+    # via pytest
 flask==2.2.2
     # via
     #   -r requirements.in
@@ -24,6 +28,8 @@ greenlet==1.1.3.post0
     # via sqlalchemy
 importlib-metadata==5.0.0
     # via flask
+iniconfig==1.1.1
+    # via pytest
 itsdangerous==2.1.2
     # via flask
 jinja2==3.1.2
@@ -32,7 +38,16 @@ markupsafe==2.1.1
     # via
     #   jinja2
     #   werkzeug
+packaging==21.3
+    # via pytest
+pluggy==1.0.0
+    # via pytest
+psycopg2==2.9.4
 pyjwt==2.6.0
+    # via -r requirements.in
+pyparsing==3.0.9
+    # via packaging
+pytest==7.2.0
     # via -r requirements.in
 python-dotenv==0.21.0
     # via -r requirements.in
@@ -46,6 +61,8 @@ sqlalchemy==1.4.42
     # via
     #   -r requirements.in
     #   flask-sqlalchemy
+tomli==2.0.1
+    # via pytest
 werkzeug==2.2.2
     # via
     #   -r requirements.in
