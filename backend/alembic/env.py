@@ -1,6 +1,5 @@
 """environment set up for alembic db migration tool"""
 
-from os import environ
 from logging.config import fileConfig
 from dotenv import load_dotenv
 from sqlalchemy import engine_from_config
@@ -14,12 +13,6 @@ load_dotenv()
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
 config = context.config
-# fixes the configuration to use environment variables
-ini = config.config_ini_section
-config.set_section_option(ini, "DB_USER", environ.get("DB_USER"))
-config.set_section_option(ini, "DB_PW", environ.get("DB_PW"))
-config.set_section_option(ini, "DB_PORT", environ.get("DB_PORT"))
-config.set_section_option(ini, "DB_NAME", environ.get("DB_NAME"))
 
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.

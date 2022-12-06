@@ -3,28 +3,23 @@ import { io } from "socket.io-client";
 import React, { useEffect, useState } from "react";
 import CreateChat from "../components/CreateChat";
 import { Button, AppBar, Toolbar, Typography, IconButton } from '@mui/material';
-import configData from "../config.json";
 
 function Chatpage() {
   const [socketInstance, setSocketInstance] = useState("");
   const [loading, setLoading] = useState(true);
   const [showChat, setShowChat] = useState(true);
 
+  console.log(`in chat page: ${process.env.NEXT_PUBLIC_BACKEND_HOSTNAME}`);
   useEffect(() => {
+    const socket = io(`${process.env.NEXT_PUBLIC_BACKEND_HOSTNAME}`, {
+      cors: {
+        origin: window.location.origin,
+      },
+    });
+
+    setSocketInstance(socket);
     if (showChat) {
-      const socket = io(configData.HOSTNAME + ":5000/", {
-        transports: ["websocket"],
-        cors: {
-          origin: configData.HOSTNAME + ":3000/",
-        },
-      });
-
-      setSocketInstance(socket);
       setLoading(false);
-
-      return function disconnect() {
-        socket.disconnect();
-      };
     }
   }, [showChat]);
 

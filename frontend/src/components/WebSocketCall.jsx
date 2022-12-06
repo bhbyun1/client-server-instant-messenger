@@ -9,12 +9,11 @@ import styles from '../styles.module.css';
 import CreateChat from "./CreateChat";
 import { io } from "socket.io-client";
 import { Button, Typography } from "@mui/material";
-import configData from "../config.json";
 
 export default function WebSocketCall({ socket }) {
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([{'username': '', 'message': ''}]);
-  const [socketInstance, setSocketInstance] = useState("");
+  const [socketInstance, setSocketInstance] = useState(socket);
   const [loading, setLoading] = useState(true);
   const [showChat, setShowChat] = useState(true);
   const [showCreateChat, setShowCreateChat] = useState(false);
@@ -39,28 +38,13 @@ export default function WebSocketCall({ socket }) {
     if (!message) {
       return;
     }
-    socket.emit("message", {'token': sessionStorage.token, 'content': message, 'public_id': sessionStorage.currentChat});
+    socketInstance.emit("message", {'token': sessionStorage.token, 'content': message, 'public_id': sessionStorage.currentChat});
     setMessage("");
   };
 
-  socket.emit("join", {'token': sessionStorage.token})
-  useEffect(() => {
-      socket.on("join", (data) => {
-          console.log("received join response from socket");
-          console.log(data);
-      });
-  });
   useEffect(() => {
 
     if (showChat) {
-      const socket = io(configData.HOSTNAME + ":5000/", {
-        transports: ["websocket"],
-        cors: {
-          origin: configData.HOSTNAME + ":3000/",
-        },
-      });
-
-      setSocketInstance(socket);
       setLoading(false);
 
       return function disconnect() {
@@ -68,19 +52,28 @@ export default function WebSocketCall({ socket }) {
       };
     }
 
-  }, [showChat])
+  }, [showChat]);
+
+  socketInstance.emit("join", {'token': sessionStorage.token})
   useEffect(() => {
-    socket.on("message", (data) => {
+      socketInstance.on("join", (data) => {
+          console.log("received join response from socket");
+          console.log(data);
+      });
+  });
+
+  useEffect(() => {
+    socketInstance.on("message", (data) => {
       console.log("received data on socket");
       console.log(data);
       setMessages([...messages, data]);
     });
     return () => {
-      socket.off("message", () => {
+      socketInstance.off("message", () => {
         console.log("message event was removed");
       });
     };
-  }, [socket, messages]);
+  }, [socketInstance, messages]);
 
 
   return (

@@ -3,7 +3,6 @@ import styles from '../styles.module.css'
 import { Button, AppBar, Toolbar, Typography, TextField, IconButton, Box, Alert, AlertTitle } from '@mui/material';
 import { useRouter } from 'next/router';
 // import Router from "react-router-dom";
-import configData from "../config.json";
 
 const Login = () => {
   const [user, setUser] = React.useState({username: '', password: ''});
@@ -32,7 +31,7 @@ const Login = () => {
     headers.set('Accept', 'application/json');
     headers.set('Authorization', 'Basic ' + Buffer.from(username + ":" + password).toString('base64'));
 
-    fetch(configData.HOSTNAME + ":5000/login", {
+    fetch(process.env.NEXT_PUBLIC_BACKEND_HOSTNAME + "/login", {
       headers: headers,
       method: 'POST',
     }).then((response) => response.json())
@@ -40,7 +39,7 @@ const Login = () => {
       if (response.token) {
         sessionStorage.setItem('token', response['token'])
         sessionStorage.setItem('Username', username);
-        router.push(configData.HOSTNAME + ":3000/chatpage");
+        router.push("/chatpage");
         return response;
       } else {
         setShowError(true);

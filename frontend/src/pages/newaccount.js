@@ -2,7 +2,6 @@ import React, {useContext} from "react";
 import styles from '../styles.module.css'
 import { Button, Alert, AlertTitle, AppBar, Toolbar, Typography, TextField, IconButton, Box } from '@mui/material';
 import useRouter from 'next/router';
-import configData from "../config.json";
 
 const Register = () => {
   const MAX_USERNAME_LENGTH = 30;
@@ -42,7 +41,7 @@ const Register = () => {
       return;
     }
     // checks with db that user exists
-    fetch(configData.HOSTNAME + ":5000/user", {
+    fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOSTNAME}/user`, {
       headers: {
         'Content-Type': 'application/json'
       },
@@ -55,7 +54,7 @@ const Register = () => {
         login_headers.set('Content-Type', 'application/json');
         login_headers.set('Accept', 'application/json');
         login_headers.set('Authorization', 'Basic ' + Buffer.from(username + ":" + password).toString('base64'));
-        fetch(configData.HOSTNAME + ':5000/login', {
+        fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOSTNAME}/login`, {
             headers: login_headers,
             method: 'POST',
           }).then((response) => response.json())
@@ -63,11 +62,11 @@ const Register = () => {
             if (response.token) {
               sessionStorage.setItem('token', response['token'])
               sessionStorage.setItem('Username', username);
-              router.push(configData.HOSTNAME + ':3000/chatpage');
+              router.push('/chatpage');
               return response;
             }
           });
-        router.push(configData.HOSTNAME + ':3000/login');
+        router.push('/login');
         return response;
       } else {
         setShowError(true);
