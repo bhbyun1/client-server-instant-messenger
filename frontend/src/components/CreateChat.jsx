@@ -3,22 +3,14 @@ import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
 import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
 import Button from "@mui/material/Button";
-import Chip from "@mui/material/Chip";
 import configData from "../config.json";
 
-//a
 function CreateChat(props) {
-    // const [visible, setVisible] = useState(false);
-
-    // const handleClose = () => {
-    //     visible ? setVisible(false) : setVisible(true);
-    // }
     const MAX_CHATNAME_LENGTH = 512;
-    const {onClose, selectedValue, open} = props;
+    const {onClose, open} = props;
     // const {open} = props;
     const [users, setUsers] = useState([]);
     const [chatName, setChatName] = useState("");
@@ -45,7 +37,7 @@ function CreateChat(props) {
             }
         ).then((response) => {
             if (response.users) {
-                let otherUsers = response.users.filter(uname => uname != sessionStorage.Username);
+                let otherUsers = response.users.filter(uname => uname !== sessionStorage.Username);
                 console.log(otherUsers);
                 setUsers(otherUsers);
                 return otherUsers;

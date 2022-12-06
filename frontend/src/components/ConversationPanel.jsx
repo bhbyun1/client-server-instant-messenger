@@ -1,5 +1,4 @@
-import { Box, Autocomplete, TextField, 
-    ListItemText, List, ListItem, Divider } from '@mui/material';
+import { Box, ListItemText, List, ListItem } from '@mui/material';
 import React, { useEffect } from 'react';
 import configData from '../config.json';
 
@@ -56,21 +55,15 @@ function ConversationPanel({setConversationMessages}) {
                 let chatroomList = response["chatrooms"];
 
                 let displayChatroom = []
-                //// console.log("chatroomList:");
-                //// console.log(chatroomList);
+
                 for (let i = 0; i < chatroomList.length; i++) {
                     let chatroom = chatroomList[i];
-                    //// console.log(chatroom)
                     if (chatroom["users"].includes(sessionStorage.Username)) {
                         displayChatroom.push({"label": chatroom["name"], "id": chatroom["public_id"]});
                     }
                 }
-                //// console.log("chats:");
-                //// console.log(chats);
-                if (JSON.stringify(chats) != JSON.stringify(displayChatroom)) {
+                if (JSON.stringify(chats) !== JSON.stringify(displayChatroom)) {
                     setChats(displayChatroom);
-                    // console.log("chats:");
-                    //// console.log(chats);
                 }
 
                 // Set chat to general chat if nothing is currently selected
@@ -101,7 +94,7 @@ function ConversationPanel({setConversationMessages}) {
                     return (
                         <ListItem button divider
                          onClick={() => fetchConversationHistory(chat)}
-                         selected={chat.id == selectedChat}
+                         selected={chat.id === selectedChat}
                          key={chat.id}
                          data-testid="chatListItem">
                             <ListItemText primary={chat.label} />

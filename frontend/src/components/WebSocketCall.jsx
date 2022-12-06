@@ -8,17 +8,14 @@ import SendIcon from '@mui/icons-material/Send';
 import styles from '../styles.module.css';
 import CreateChat from "./CreateChat";
 import { io } from "socket.io-client";
-import { Button, Typography } from "@mui/material";
+import { Button } from "@mui/material";
 import configData from "../config.json";
 
 export default function WebSocketCall({ socket }) {
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([{'username': '', 'message': ''}]);
-  const [socketInstance, setSocketInstance] = useState("");
-  const [loading, setLoading] = useState(true);
-  const [showChat, setShowChat] = useState(true);
   const [showCreateChat, setShowCreateChat] = useState(false);
-  const [selectedValue, setSelectedValue] = useState([]);
+  const [showChat, setShowChat] = useState(true);
 
   const showCreateChatClick = () => {
     if (!showCreateChat) {
@@ -51,22 +48,17 @@ export default function WebSocketCall({ socket }) {
       });
   });
   useEffect(() => {
+    const socket = io(configData.HOSTNAME + ":5000/", {
+    transports: ["websocket"],
+    cors: {
+        origin: configData.HOSTNAME + ":3000/",
+    },
+    });
 
-    if (showChat) {
-      const socket = io(configData.HOSTNAME + ":5000/", {
-        transports: ["websocket"],
-        cors: {
-          origin: configData.HOSTNAME + ":3000/",
-        },
-      });
 
-      setSocketInstance(socket);
-      setLoading(false);
-
-      return function disconnect() {
-        socket.disconnect();
-      };
-    }
+    return function disconnect() {
+    socket.disconnect();
+    };
 
   }, [showChat])
   useEffect(() => {
@@ -88,7 +80,6 @@ export default function WebSocketCall({ socket }) {
       <div className={styles.chats_wrapper}>
         {/* <Typography variant="h5" className={styles.chats_header}>Select a Chat</Typography> */}
           <CreateChat
-            selectedValue={selectedValue}
             open={showCreateChat}
             onClose={showCreateChatClick}
           />
@@ -114,7 +105,7 @@ export default function WebSocketCall({ socket }) {
             value={message}
             onChange={handleText}
             onKeyDown={(e) => {
-                if (e.key == 'Enter'){
+                if (e.key === 'Enter'){
                   handleSubmit();
                 }
               }

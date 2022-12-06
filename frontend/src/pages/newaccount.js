@@ -1,4 +1,4 @@
-import React, {useContext} from "react";
+import React from "react";
 import styles from '../styles.module.css'
 import { Button, Alert, AlertTitle, AppBar, Toolbar, Typography, TextField, IconButton, Box } from '@mui/material';
 import useRouter from 'next/router';
@@ -50,7 +50,7 @@ const Register = () => {
       body: JSON.stringify({ 'username': username, 'password': password })
     }).then((response) => response.json())
     .then((response) => {
-      if (response.message == 'Registration successful') {
+      if (response.message === 'Registration successful') {
         let login_headers = new Headers();
         login_headers.set('Content-Type', 'application/json');
         login_headers.set('Accept', 'application/json');
@@ -67,7 +67,6 @@ const Register = () => {
               return response;
             }
           });
-        router.push(configData.HOSTNAME + ':3000/login');
         return response;
       } else {
         setShowError(true);
